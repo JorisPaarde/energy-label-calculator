@@ -1,0 +1,10 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.dynamic-form {
+  padding: $spacing-xl;
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+} 

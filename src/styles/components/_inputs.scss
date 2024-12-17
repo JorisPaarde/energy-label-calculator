@@ -1,0 +1,105 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Base input styles
+.form-input,
+.form-select {
+  @include input-base;
+
+  &:focus {
+    @include input-focus;
+  }
+}
+
+// Select specific styles
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-position: right $spacing-md center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+// Radio and Checkbox styles
+.radio,
+.checkbox {
+  &-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    margin-top: $spacing-xs;
+    width: 100%;
+    box-sizing: border-box;
+
+    @include mobile {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+  }
+
+  &-label {
+    @include flex-center;
+    gap: $spacing-xs;
+    cursor: pointer;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $border-radius-sm;
+    transition: all 0.2s ease;
+    background: $color-input-bg;
+    border: 1px solid $color-border;
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+    }
+
+    @include mobile {
+      width: 100%;
+    }
+  }
+
+  &-input {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    border: 2px solid $color-primary;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:checked {
+      background-color: $color-primary;
+      border-color: $color-primary;
+    }
+  }
+}
+
+.radio-input {
+  &:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background-color: white;
+  }
+}
+
+.checkbox-input {
+  border-radius: $border-radius-sm;
+
+  &:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+} 

@@ -21,6 +21,21 @@ export default defineConfig(({ mode }) => ({
     })
   ],
   
+  css: {
+    preprocessorOptions: {
+      scss: {
+      }
+    }
+  },
+
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@styles': path.resolve(__dirname, './src/styles'),
+      '@components': path.resolve(__dirname, './src/components')
+    }
+  },
+  
   base: '/',
   
   build: {

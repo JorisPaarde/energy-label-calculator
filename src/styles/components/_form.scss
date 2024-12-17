@@ -1,0 +1,32 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.form {
+  &-container {
+    max-width: 600px;
+    margin: $spacing-xl auto;
+    font-family: $font-family-base;
+    background: $color-background;
+    color: $color-text;
+    box-shadow: $shadow-sm;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-lg;
+
+    @include mobile {
+      margin: $spacing-md;
+    }
+  }
+
+  &-group {
+    margin-bottom: $spacing-lg;
+    box-sizing: border-box;
+  }
+
+  &-label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-weight: 500;
+    font-size: $font-size-sm;
+    letter-spacing: 0.025em;
+  }
+} 

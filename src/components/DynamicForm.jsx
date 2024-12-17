@@ -1,62 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import defaultFormData from '../data/formquestions.json';
-
-const styles = {
-  light: {
-    background: '#f0f0f0',
-    color: '#333',
-    padding: '20px',
-    borderRadius: '8px',
-    margin: '10px 0'
-  },
-  dark: {
-    background: '#333',
-    color: '#f0f0f0',
-    padding: '20px',
-    borderRadius: '8px',
-    margin: '10px 0'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem'
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem'
-  },
-  label: {
-    fontWeight: 'bold'
-  },
-  input: {
-    padding: '0.5rem',
-    borderRadius: '4px',
-    border: '1px solid #ccc'
-  },
-  select: {
-    padding: '0.5rem',
-    borderRadius: '4px',
-    border: '1px solid #ccc'
-  },
-  button: {
-    padding: '0.75rem 1rem',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginTop: '1rem'
-  }
-};
+import '@styles/main.scss';
 
 const DynamicForm = ({ instanceId, settings }) => {
-  const theme = settings?.theme || 'light';
   const formData = settings?.formData 
     ? JSON.parse(settings.formData).questions 
     : defaultFormData.questions;
 
-  const [formResponses, setFormResponses] = useState({});
+  // Initialize form responses with empty values
+  const initializeFormResponses = () => {
+    const initialResponses = {};
+    formData.forEach((item, index) => {
+      const questionId = `question_${index}`;
+      if (item.inputType === 'checkbox') {
+        initialResponses[questionId] = [];
+      } else {
+        initialResponses[questionId] = '';
+      }
+    });
+    return initialResponses;
+  };
+
+  const [formResponses, setFormResponses] = useState(initializeFormResponses());
+
+  // Reset form when formData changes
+  useEffect(() => {
+    setFormResponses(initializeFormResponses());
+  }, [settings?.formData]);
 
   const handleInputChange = (questionId, value) => {
     setFormResponses(prev => ({
@@ -83,9 +53,9 @@ const DynamicForm = ({ instanceId, settings }) => {
           <input
             type={item.inputType}
             id={questionId}
-            value={formResponses[questionId] || ''}
+            value={formResponses[questionId]}
             onChange={(e) => handleInputChange(questionId, e.target.value)}
-            style={styles.input}
+            className="form-input"
             required
           />
         );
@@ -94,9 +64,9 @@ const DynamicForm = ({ instanceId, settings }) => {
         return (
           <select
             id={questionId}
-            value={formResponses[questionId] || ''}
+            value={formResponses[questionId]}
             onChange={(e) => handleInputChange(questionId, e.target.value)}
-            style={styles.select}
+            className="form-select"
             required
           >
             <option value="">Select an option</option>
@@ -110,18 +80,19 @@ const DynamicForm = ({ instanceId, settings }) => {
 
       case 'radio':
         return (
-          <div>
+          <div className="radio-group">
             {item.choices.map((choice, choiceIndex) => (
-              <label key={choiceIndex} style={{ marginRight: '1rem' }}>
+              <label key={choiceIndex} className="radio-label">
                 <input
                   type="radio"
                   name={questionId}
                   value={choice}
                   checked={formResponses[questionId] === choice}
                   onChange={(e) => handleInputChange(questionId, e.target.value)}
+                  className="radio-input"
                   required
                 />
-                {' '}{choice}
+                {choice}
               </label>
             ))}
           </div>
@@ -129,9 +100,9 @@ const DynamicForm = ({ instanceId, settings }) => {
 
       case 'checkbox':
         return (
-          <div>
+          <div className="checkbox-group">
             {item.choices.map((choice, choiceIndex) => (
-              <label key={choiceIndex} style={{ marginRight: '1rem' }}>
+              <label key={choiceIndex} className="checkbox-label">
                 <input
                   type="checkbox"
                   name={questionId}
@@ -144,8 +115,9 @@ const DynamicForm = ({ instanceId, settings }) => {
                       : currentValues.filter(v => v !== choice);
                     handleInputChange(questionId, newValues);
                   }}
+                  className="checkbox-input"
                 />
-                {' '}{choice}
+                {choice}
               </label>
             ))}
           </div>
@@ -157,17 +129,17 @@ const DynamicForm = ({ instanceId, settings }) => {
   };
 
   return (
-    <div style={styles[theme]}>
-      <form onSubmit={handleSubmit} style={styles.form}>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="dynamic-form">
         {formData.map((item, index) => (
-          <div key={index} style={styles.formGroup}>
-            <label htmlFor={`question_${index}`} style={styles.label}>
+          <div key={index} className="form-group">
+            <label htmlFor={`question_${index}`} className="form-label">
               {item.question}
             </label>
             {renderFormField(item, index)}
           </div>
         ))}
-        <button type="submit" style={styles.button}>
+        <button type="submit" className="submit-button">
           Submit
         </button>
       </form>

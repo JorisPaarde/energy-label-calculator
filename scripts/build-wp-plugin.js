@@ -70,12 +70,12 @@ add_action('wp_enqueue_scripts', '${PLUGIN_NAME.replace(/-/g, '_')}_enqueue_scri
 
 function ${PLUGIN_NAME.replace(/-/g, '_')}_shortcode($atts = []) {
     $attributes = shortcode_atts([
-        'theme' => 'light'
+        'form-data' => ''
     ], $atts);
     
     return sprintf(
-        '<div class="${PLUGIN_NAME}-wp-container" data-theme="%s"></div>',
-        esc_attr($attributes['theme'])
+        '<div class="${PLUGIN_NAME}-wp-container" data-form-data="%s"></div>',
+        esc_attr($attributes['form-data'])
     );
 }
 add_shortcode('${PLUGIN_NAME.replace(/-/g, '_')}', '${PLUGIN_NAME.replace(/-/g, '_')}_shortcode');
