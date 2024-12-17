@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Test Environment</title>
+
+    <!-- React Development CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+<body>
+    <h1>WordPress Test Environment</h1>
+    
+    <!-- Multiple calculator instances -->
+    <div class="wordpress-widget-wp-container" data-theme="light"></div>
+    <hr>
+    <div class="wordpress-widget-wp-container" data-theme="dark"></div>
+
+    <!-- Development build with HMR -->
+    <script type="module" src="/src/wordpress-entry.jsx"></script>
+</body>
+</html> 
