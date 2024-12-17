@@ -1,28 +1,32 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
-.form {
-  &-container {
+.energy-calculator {
+  &-form-container {
     max-width: 600px;
     margin: $spacing-xl auto;
+    padding: $spacing-lg;
     font-family: $font-family-base;
     background: $color-background;
     color: $color-text;
     box-shadow: $shadow-sm;
     border: 1px solid $color-border;
     border-radius: $border-radius-lg;
+    box-sizing: border-box;
 
     @include mobile {
       margin: $spacing-md;
+      padding: $spacing-md;
     }
   }
 
-  &-group {
+  &-form-group {
     margin-bottom: $spacing-lg;
     box-sizing: border-box;
+    width: 100%;
   }
 
-  &-label {
+  &-form-label {
     display: block;
     margin-bottom: $spacing-xs;
     font-weight: 500;

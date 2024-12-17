@@ -24,6 +24,10 @@ export default defineConfig(({ mode }) => ({
   css: {
     preprocessorOptions: {
       scss: {
+        additionalData: `
+          @use "src/styles/abstracts/_variables.scss" as *;
+          @use "src/styles/abstracts/_mixins.scss" as *;
+        `
       }
     }
   },
@@ -58,7 +62,7 @@ export default defineConfig(({ mode }) => ({
           'react-dom': 'ReactDOM'
         },
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.css')) {
+          if (assetInfo.name === 'style.css') {
             return 'wordpress-widget.css'
           }
           return assetInfo.name

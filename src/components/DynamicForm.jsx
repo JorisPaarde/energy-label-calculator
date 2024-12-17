@@ -55,7 +55,7 @@ const DynamicForm = ({ instanceId, settings }) => {
             id={questionId}
             value={formResponses[questionId]}
             onChange={(e) => handleInputChange(questionId, e.target.value)}
-            className="form-input"
+            className="energy-calculator-form-input"
             required
           />
         );
@@ -66,7 +66,7 @@ const DynamicForm = ({ instanceId, settings }) => {
             id={questionId}
             value={formResponses[questionId]}
             onChange={(e) => handleInputChange(questionId, e.target.value)}
-            className="form-select"
+            className="energy-calculator-form-select"
             required
           >
             <option value="">Select an option</option>
@@ -80,16 +80,16 @@ const DynamicForm = ({ instanceId, settings }) => {
 
       case 'radio':
         return (
-          <div className="radio-group">
+          <div className="energy-calculator-radio-group">
             {item.choices.map((choice, choiceIndex) => (
-              <label key={choiceIndex} className="radio-label">
+              <label key={choiceIndex} className="energy-calculator-radio-label">
                 <input
                   type="radio"
                   name={questionId}
                   value={choice}
                   checked={formResponses[questionId] === choice}
                   onChange={(e) => handleInputChange(questionId, e.target.value)}
-                  className="radio-input"
+                  className="energy-calculator-radio-input"
                   required
                 />
                 {choice}
@@ -100,9 +100,9 @@ const DynamicForm = ({ instanceId, settings }) => {
 
       case 'checkbox':
         return (
-          <div className="checkbox-group">
+          <div className="energy-calculator-checkbox-group">
             {item.choices.map((choice, choiceIndex) => (
-              <label key={choiceIndex} className="checkbox-label">
+              <label key={choiceIndex} className="energy-calculator-checkbox-label">
                 <input
                   type="checkbox"
                   name={questionId}
@@ -115,7 +115,7 @@ const DynamicForm = ({ instanceId, settings }) => {
                       : currentValues.filter(v => v !== choice);
                     handleInputChange(questionId, newValues);
                   }}
-                  className="checkbox-input"
+                  className="energy-calculator-checkbox-input"
                 />
                 {choice}
               </label>
@@ -129,17 +129,17 @@ const DynamicForm = ({ instanceId, settings }) => {
   };
 
   return (
-    <div className="form-container">
+    <div className="energy-calculator-form-container">
       <form onSubmit={handleSubmit} className="dynamic-form">
         {formData.map((item, index) => (
-          <div key={index} className="form-group">
-            <label htmlFor={`question_${index}`} className="form-label">
+          <div key={index} className="energy-calculator-form-group">
+            <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
               {item.question}
             </label>
             {renderFormField(item, index)}
           </div>
         ))}
-        <button type="submit" className="submit-button">
+        <button type="submit" className="energy-calculator-submit-button">
           Submit
         </button>
       </form>

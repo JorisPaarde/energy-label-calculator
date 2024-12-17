@@ -31,6 +31,14 @@ if (!defined('ABSPATH')) {
 function ${PLUGIN_NAME.replace(/-/g, '_')}_enqueue_scripts() {
     $suffix = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
     
+    // Enqueue Google Fonts
+    wp_enqueue_style(
+        '${PLUGIN_NAME}-google-fonts',
+        'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
+        [],
+        null
+    );
+    
     // Enqueue production React and ReactDOM
     wp_enqueue_script(
         'react',
@@ -54,7 +62,7 @@ function ${PLUGIN_NAME.replace(/-/g, '_')}_enqueue_scripts() {
     wp_enqueue_style(
         '${PLUGIN_NAME}',
         plugins_url('dist/${PLUGIN_NAME}.css', __FILE__),
-        [],
+        ['${PLUGIN_NAME}-google-fonts'],
         '${PLUGIN_VERSION}'
     );
     
