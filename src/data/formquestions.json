@@ -1,31 +1,75 @@
 {
   "questions": [
     {
-      "question": "What's your name?",
-      "inputType": "text"
+      "question": "Bouwjaar van je woning:",
+      "inputType": "number",
+      "placeholder": "bijv. 1980"
     },
     {
-      "question": "What's your age?",
-      "inputType": "number"
-    },
-    {
-      "question": "What's your email?",
-      "inputType": "email"
-    },
-    {
-      "question": "Select your favorite color",
+      "question": "Woningsoort:",
       "inputType": "select",
-      "choices": ["Red", "Blue", "Green", "Yellow"]
+      "placeholder": "Selecteer een woningsoort...",
+      "choices": ["Vrijstaande woning", "Hoekwoning", "Tussenwoning", "Appartement"]
     },
     {
-      "question": "Choose your preferred contact method",
+      "question": "Oppervlakte:",
+      "inputType": "number",
+      "placeholder": "m²"
+    },
+    {
+      "question": "Glas:",
+      "inputType": "select",
+      "choices": ["Enkelglas", "Dubbelglas", "HR glas", "HR+ /++ /+++ glas"]
+    },
+    {
+      "question": "Dakisolatie:",
+      "inputType": "select",
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+    },
+    {
+      "question": "Gevelisolatie:",
+      "inputType": "select",
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+    },
+    {
+      "question": "Vloerisolatie:",
+      "inputType": "select",
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+    },
+    {
+      "question": "Verwarming:",
+      "inputType": "select",
+      "choices": ["Moederhaard / Gaskachel", "CV-ketel voor 2000", "CV-ketel 2000-2020", "CV-ketel na 2020", "Warmtepomp"]
+    },
+    {
+      "question": "Warmwatervoorziening:",
+      "inputType": "select",
+      "choices": ["Oude gasboiler", "Nieuwe gasboiler", "Elektrische boiler", "Zonneboiler", "Combiketel"]
+    },
+    {
+      "question": "Ventilatiesysteem:",
+      "inputType": "select",
+      "choices": ["Natuurlijke ventilatie", "Mechanische afzuiging", "Gebalanceerde ventilatie", "Gebalanceerde ventilatie met WTW"]
+    },
+    {
+      "question": "Zonnepanelen:",
+      "inputType": "select",
+      "choices": ["Nee", "Ja, minder dan 6", "Ja, 6 tot 10", "Ja, 10 of meer"]
+    },
+    {
+      "question": "Zonneboiler:",
       "inputType": "radio",
-      "choices": ["Email", "Phone", "Post"]
+      "choices": ["Nee", "Ja"]
     },
     {
-      "question": "Select your interests",
+      "question": "Aanvullende energiebesparende maatregelen:",
       "inputType": "checkbox",
-      "choices": ["Sports", "Music", "Reading", "Travel", "Technology"]
+      "choices": [
+        "Energiezuinige verlichting (LED)",
+        "Slimme thermostaat",
+        "Tochtstrips",
+        "Radiatorfolie"
+      ]
     }
   ]
 } 
