@@ -1,0 +1,31 @@
+{
+  "questions": [
+    {
+      "question": "What's your name?",
+      "inputType": "text"
+    },
+    {
+      "question": "What's your age?",
+      "inputType": "number"
+    },
+    {
+      "question": "What's your email?",
+      "inputType": "email"
+    },
+    {
+      "question": "Select your favorite color",
+      "inputType": "select",
+      "choices": ["Red", "Blue", "Green", "Yellow"]
+    },
+    {
+      "question": "Choose your preferred contact method",
+      "inputType": "radio",
+      "choices": ["Email", "Phone", "Post"]
+    },
+    {
+      "question": "Select your interests",
+      "inputType": "checkbox",
+      "choices": ["Sports", "Music", "Reading", "Travel", "Technology"]
+    }
+  ]
+} 

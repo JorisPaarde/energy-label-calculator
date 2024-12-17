@@ -1,10 +1,10 @@
 import React from 'react'
-import TestComponent from './components/TestComponent'
+import DynamicForm from './components/DynamicForm'
 
 function App({ instanceId = 0, settings = {} }) {
   return (
     <div>
-      <TestComponent 
+      <DynamicForm 
         instanceId={instanceId} 
         settings={settings}
       />
