@@ -1,0 +1,82 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.energy-calculator {
+  &-header {
+    margin-bottom: $spacing-xl * 1.5;
+    text-align: center;
+    padding: $spacing-lg;
+  }
+
+  &-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: $spacing-xl * 1.5;
+    color: #1a2b3b;
+    line-height: 1.2;
+  }
+
+  &-benefits {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto $spacing-xl * 1.5;
+    max-width: 1000px;
+    padding: 0 $spacing-lg;
+
+    @include mobile {
+      flex-direction: column;
+      gap: $spacing-md;
+      text-align: left;
+      padding: 0;
+    }
+  }
+
+  &-benefit {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    color: #1a2b3b;
+    font-size: 0.7rem;
+
+    &-icon {
+      color: #4287f5;
+      font-size: 1.125rem;
+    }
+  }
+
+  &-info {
+    position: relative;
+    background: #f5f8ff;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl $spacing-xl;
+    margin: 0 auto;
+    max-width: 1000px;
+    text-align: left;
+
+    &-icon {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2.5rem;
+      height: 2.5rem;
+      background: #4287f5;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      color: #1a2b3b;
+      line-height: 1.6;
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+} 

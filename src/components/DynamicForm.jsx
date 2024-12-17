@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import defaultFormData from '../data/formquestions.json';
+import FormHeader from './FormHeader';
 import '@styles/main.scss';
 
 const DynamicForm = ({ instanceId, settings }) => {
@@ -56,6 +57,7 @@ const DynamicForm = ({ instanceId, settings }) => {
             value={formResponses[questionId]}
             onChange={(e) => handleInputChange(questionId, e.target.value)}
             className="energy-calculator-form-input"
+            placeholder={item.placeholder}
             required
           />
         );
@@ -69,7 +71,7 @@ const DynamicForm = ({ instanceId, settings }) => {
             className="energy-calculator-form-select"
             required
           >
-            <option value="">Select an option</option>
+            {item.placeholder && <option value="">{item.placeholder}</option>}
             {item.choices.map((choice, choiceIndex) => (
               <option key={choiceIndex} value={choice}>
                 {choice}
@@ -130,6 +132,7 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   return (
     <div className="energy-calculator-form-container">
+      <FormHeader />
       <form onSubmit={handleSubmit} className="dynamic-form">
         {formData.map((item, index) => (
           <div key={index} className="energy-calculator-form-group">
@@ -140,7 +143,7 @@ const DynamicForm = ({ instanceId, settings }) => {
           </div>
         ))}
         <button type="submit" className="energy-calculator-submit-button">
-          Submit
+          Bereken Energielabel
         </button>
       </form>
     </div>
