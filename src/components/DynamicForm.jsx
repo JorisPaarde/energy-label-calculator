@@ -194,21 +194,21 @@ const DynamicForm = ({ instanceId, settings }) => {
   return (
     <div className="energy-calculator-form-container" ref={formContainerRef}>
       <FormHeader />
-      <div className="form-content-wrapper">
+      <div className="energy-calculator-content-wrapper">
         <CSSTransition
           in={!calculationState.result}
           timeout={ANIMATION_DURATION}
-          classNames="form-fade"
+          classNames="energy-calculator-form-fade"
           unmountOnExit
         >
-          <form onSubmit={handleSubmit} className={`dynamic-form ${calculationState.isCalculating ? 'calculating' : ''}`}>
+          <form onSubmit={handleSubmit} className={`energy-calculator-form ${calculationState.isCalculating ? 'energy-calculator-calculating' : ''}`}>
             <TransitionGroup>
               {formData.map((item, index) => (
                 shouldShowQuestion(item, index) && (
                   <CSSTransition
                     key={index}
                     timeout={ANIMATION_DURATION}
-                    classNames="form-field"
+                    classNames="energy-calculator-form-field"
                     unmountOnExit
                   >
                     <div className="energy-calculator-form-group">
@@ -236,22 +236,19 @@ const DynamicForm = ({ instanceId, settings }) => {
         <CSSTransition
           in={calculationState.result !== null}
           timeout={ANIMATION_DURATION}
-          classNames="result-fade"
+          classNames="energy-calculator-result-fade"
           unmountOnExit
         >
           <div className="energy-calculator-result">
             <h2>Berekend Energielabel</h2>
-            <div className="energy-label-display">
-              <span className="label">{calculationState.result?.label}</span>
+            <div className="energy-calculator-label-display">
+              <span className="energy-calculator-label">{calculationState.result?.label}</span>
             </div>
-            <div className="result-details">
+            <div className="energy-calculator-result-details">
               {calculationState.result?.details}
             </div>
-            <button 
-              onClick={handleReset}
-              className="energy-calculator-reset-button"
-            >
-              Nieuwe Berekening
+            <button onClick={handleReset} className="energy-calculator-reset-button">
+              Opnieuw Berekenen
             </button>
           </div>
         </CSSTransition>

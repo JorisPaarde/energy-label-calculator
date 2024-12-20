@@ -3,7 +3,7 @@ import DynamicForm from './components/DynamicForm'
 
 function App({ instanceId = 0, settings = {} }) {
   return (
-    <div>
+    <div className="energy-calculator-widget">
       <DynamicForm 
         instanceId={instanceId} 
         settings={settings}
