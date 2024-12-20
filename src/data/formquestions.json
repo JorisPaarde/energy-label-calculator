@@ -3,75 +3,100 @@
     {
       "question": "In welk jaar is uw woning gebouwd?",
       "inputType": "select",
-      "choices": [
-        "Vóór 1945",
-        "1945-1975",
-        "1975-1990",
-        "1990-2005",
-        "2005-heden"
-      ]
+      "answers": {
+        "Vóór 1945": 40,
+        "1945-1975": 60, 
+        "1975-1990": 80,
+        "1990-2005": 100,
+        "2005-heden": 140
+      }
     },
     {
       "question": "wat voor soort woning heeft u?",
-      "inputType": "select",
+      "inputType": "select", 
       "placeholder": "Selecteer een woningsoort...",
-      "choices": ["Vrijstaande woning", "Hoekwoning", "Tussenwoning", "Appartement"]
+      "answers": {
+        "Vrijstaande woning": 30,
+        "Hoekwoning": 40,
+        "Tussenwoning": 50,
+        "Appartement": 60
+      }
     },
     {
       "question": "welk type appartement heeft u?",
       "inputType": "select",
       "placeholder": "Selecteer type appartement...",
-      "choices": [
-        "Hoekappartement met dak",
-        "Hoekappartement zonder dak",
-        "Tussenappartement met dak",
-        "Tussenappartement zonder dak"
-      ],
+      "answers": {
+        "Hoekappartement met dak": 40,
+        "Hoekappartement zonder dak": 50,
+        "Tussenappartement met dak": 50,
+        "Tussenappartement zonder dak": 60
+      },
       "showIf": {
-        "question": "Woningsoort:",
+        "question": "wat voor soort woning heeft u?",
         "equals": "Appartement"
       }
     },
     {
       "question": "wat is de oppervlakte van uw woning?",
       "inputType": "number",
-      "placeholder": "m²"
+      "placeholder": "m²",
+      "scoring": {
+        "ranges": [
+          {"max": 50, "value": 80},
+          {"max": 100, "value": 70},
+          {"max": 150, "value": 60},
+          {"max": 200, "value": 50},
+          {"min": 200, "value": 40}
+        ]
+      }
     },
     {
       "question": "Welk type glas heeft u?",
       "inputType": "select",
-      "choices": ["Enkelglas", "Dubbelglas", "HR glas", "HR+ /++ /+++ glas"]
+      "answers": {
+        "Enkelglas": 20,
+        "Dubbelglas": 60,
+        "HR glas": 100,
+        "HR+ /++ /+++ glas": 140
+      }
     },
     {
       "question": "Welke typen isolatie heeft je woning?",
       "inputType": "checkbox",
-      "choices": [
-        {
-          "value": "Dakisolatie",
-          "showIf": {
-            "question": "Type appartement:",
-            "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
-          }
-        },
-        "Gevelisolatie",
-        "Vloerisolatie"
-      ]
+      "answers": {
+        "Dakisolatie": 40,
+        "Gevelisolatie": 40,
+        "Vloerisolatie": 30
+      },
+      "showIf": {
+        "question": "welk type appartement heeft u?",
+        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
+      }
     },
     {
       "question": "Hoe goed is de isolatie van uw dak?",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "answers": {
+        "Geen na-isolatie": 0,
+        "Matige isolatie": 80,
+        "Goede isolatie": 120
+      },
       "showIf": {
         "question": "Welke typen isolatie heeft je woning?",
         "contains": "Dakisolatie",
-        "andQuestion": "Type appartement:",
+        "andQuestion": "welk type appartement heeft u?",
         "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
       }
     },
     {
       "question": "hoeveel is de isolatie van uw gevel?",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "answers": {
+        "Geen na-isolatie": 0,
+        "Matige isolatie": 80,
+        "Goede isolatie": 120
+      },
       "showIf": {
         "question": "Welke typen isolatie heeft je woning?",
         "contains": "Gevelisolatie"
@@ -80,7 +105,11 @@
     {
       "question": "hoe goed is de isolatie van uw vloer?",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "answers": {
+        "Geen na-isolatie": 0,
+        "Matige isolatie": 60,
+        "Goede isolatie": 90
+      },
       "showIf": {
         "question": "Welke typen isolatie heeft je woning?",
         "contains": "Vloerisolatie"
@@ -89,33 +118,55 @@
     {
       "question": "welk type verwarming heeft u?",
       "inputType": "select",
-      "choices": ["Moederhaard / Gaskachel", "CV-ketel voor 2000", "CV-ketel 2000-2020", "CV-ketel na 2020", "Warmtepomp"]
+      "answers": {
+        "Moederhaard / Gaskachel": 20,
+        "CV-ketel voor 2000": 60,
+        "CV-ketel 2000-2020": 90,
+        "CV-ketel na 2020": 120,
+        "Warmtepomp": 160
+      }
     },
     {
       "question": "welk type warmwatervoorziening heeft u?",
       "inputType": "select",
-      "choices": ["Oude gasboiler", "Nieuwe gasboiler", "Elektrische boiler", "Zonneboiler", "Combiketel"]
+      "answers": {
+        "Oude gasboiler": 20,
+        "Nieuwe gasboiler": 40,
+        "Elektrische boiler": 40,
+        "Zonneboiler": 100,
+        "Combiketel": 60
+      }
     },
     {
       "question": "welk type ventilatiesysteem heeft u?",
       "inputType": "select",
-      "choices": ["Natuurlijke ventilatie", "Mechanische afzuiging", "Gebalanceerde ventilatie", "Gebalanceerde ventilatie met WTW"]
+      "answers": {
+        "Natuurlijke ventilatie": 30,
+        "Mechanische afzuiging": 60,
+        "Gebalanceerde ventilatie": 90,
+        "Gebalanceerde ventilatie met WTW": 150
+      }
     },
     {
       "question": "heeft u zonnepanelen?",
       "inputType": "select",
-      "choices": ["Nee", "Ja, minder dan 6", "Ja, 6 tot 10", "Ja, 10 of meer"]
+      "answers": {
+        "Nee": 0,
+        "Ja, minder dan 6": 40,
+        "Ja, 6 tot 10": 80,
+        "Ja, 10 of meer": 160
+      }
     },
     {
       "question": "welke aanvullende energiebesparende maatregelen heeft u?",
       "inputType": "checkbox",
-      "choices": [
-        "Energiezuinige verlichting (LED)",
-        "Slimme thermostaat",
-        "Tochtstrips",
-        "Radiatorfolie",
-        "Geen"
-      ]
+      "answers": {
+        "Energiezuinige verlichting (LED)": 20,
+        "Slimme thermostaat": 30,
+        "Tochtstrips": 20,
+        "Radiatorfolie": 20,
+        "Geen": 0
+      }
     }
   ]
-} 
+}

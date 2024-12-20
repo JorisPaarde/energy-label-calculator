@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormFields = ({ 
+export const FormFields = ({ 
   item, 
   index, 
   formResponses, 
@@ -35,9 +35,9 @@ const FormFields = ({
           required
         >
           {item.placeholder && <option value="">{item.placeholder}</option>}
-          {item.choices.map((choice, choiceIndex) => (
-            <option key={choiceIndex} value={choice}>
-              {choice}
+          {Object.entries(item.answers).map(([label, value], choiceIndex) => (
+            <option key={choiceIndex} value={label}>
+              {label}
             </option>
           ))}
         </select>
@@ -46,18 +46,18 @@ const FormFields = ({
     case 'radio':
       return (
         <div className="energy-calculator-radio-group">
-          {item.choices.map((choice, choiceIndex) => (
+          {Object.entries(item.answers).map(([label, value], choiceIndex) => (
             <label key={choiceIndex} className="energy-calculator-radio-label">
               <input
                 type="radio"
                 name={questionId}
-                value={choice}
-                checked={formResponses[questionId] === choice}
+                value={label}
+                checked={formResponses[questionId] === label}
                 onChange={(e) => handleInputChange(questionId, e.target.value)}
                 className="energy-calculator-radio-input"
                 required
               />
-              {choice}
+              {label}
             </label>
           ))}
         </div>
@@ -66,35 +66,25 @@ const FormFields = ({
     case 'checkbox':
       return (
         <div className="energy-calculator-checkbox-group">
-          {item.choices.map((choice, choiceIndex) => {
-            // Handle conditional choices
-            if (typeof choice === 'object' && choice.showIf) {
-              if (!shouldShowQuestion({ showIf: choice.showIf }, index)) {
-                return null;
-              }
-              choice = choice.value;
-            }
-
-            return (
-              <label key={choiceIndex} className="energy-calculator-checkbox-label">
-                <input
-                  type="checkbox"
-                  name={questionId}
-                  value={choice}
-                  checked={formResponses[questionId]?.includes(choice)}
-                  onChange={(e) => {
-                    const currentValues = formResponses[questionId] || [];
-                    const newValues = e.target.checked
-                      ? [...currentValues, choice]
-                      : currentValues.filter(v => v !== choice);
-                    handleInputChange(questionId, newValues);
-                  }}
-                  className="energy-calculator-checkbox-input"
-                />
-                {choice}
-              </label>
-            );
-          })}
+          {Object.entries(item.answers).map(([label, value], choiceIndex) => (
+            <label key={choiceIndex} className="energy-calculator-checkbox-label">
+              <input
+                type="checkbox"
+                name={questionId}
+                value={label}
+                checked={formResponses[questionId]?.includes(label)}
+                onChange={(e) => {
+                  const currentValues = formResponses[questionId] || [];
+                  const newValues = e.target.checked
+                    ? [...currentValues, label]
+                    : currentValues.filter(v => v !== label);
+                  handleInputChange(questionId, newValues);
+                }}
+                className="energy-calculator-checkbox-input"
+              />
+              {label}
+            </label>
+          ))}
         </div>
       );
 

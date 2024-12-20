@@ -1,0 +1,15 @@
+{
+  "questions": [
+    {
+      "question": "In welk jaar is uw woning gebouwd?",
+      "inputType": "select",
+      "choices": [
+        "Vóór 1945",
+        "1945-1975",
+        "1975-1990",
+        "1990-2005",
+        "2005-heden"
+      ]
+    }
+  ]
+} 
