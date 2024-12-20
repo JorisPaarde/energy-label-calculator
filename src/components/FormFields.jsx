@@ -66,25 +66,33 @@ export const FormFields = ({
     case 'checkbox':
       return (
         <div className="energy-calculator-checkbox-group">
-          {Object.entries(item.answers).map(([label, value], choiceIndex) => (
-            <label key={choiceIndex} className="energy-calculator-checkbox-label">
-              <input
-                type="checkbox"
-                name={questionId}
-                value={label}
-                checked={formResponses[questionId]?.includes(label)}
-                onChange={(e) => {
-                  const currentValues = formResponses[questionId] || [];
-                  const newValues = e.target.checked
-                    ? [...currentValues, label]
-                    : currentValues.filter(v => v !== label);
-                  handleInputChange(questionId, newValues);
-                }}
-                className="energy-calculator-checkbox-input"
-              />
-              {label}
-            </label>
-          ))}
+          {Object.entries(item.answers).map(([label, answerData], choiceIndex) => {
+            if (answerData.showIf && !shouldShowQuestion({ showIf: answerData.showIf })) {
+              return null;
+            }
+
+            const value = typeof answerData === 'object' ? answerData.value : answerData;
+
+            return (
+              <label key={choiceIndex} className="energy-calculator-checkbox-label">
+                <input
+                  type="checkbox"
+                  name={questionId}
+                  value={label}
+                  checked={formResponses[questionId]?.includes(label)}
+                  onChange={(e) => {
+                    const currentValues = formResponses[questionId] || [];
+                    const newValues = e.target.checked
+                      ? [...currentValues, label]
+                      : currentValues.filter(v => v !== label);
+                    handleInputChange(questionId, newValues);
+                  }}
+                  className="energy-calculator-checkbox-input"
+                />
+                {label}
+              </label>
+            );
+          })}
         </div>
       );
 

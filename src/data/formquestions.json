@@ -65,13 +65,15 @@
       "question": "Welke typen isolatie heeft je woning?",
       "inputType": "checkbox",
       "answers": {
-        "Dakisolatie": 40,
+        "Dakisolatie": {
+          "value": 40,
+          "showIf": {
+            "question": "welk type appartement heeft u?",
+            "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
+          }
+        },
         "Gevelisolatie": 40,
         "Vloerisolatie": 30
-      },
-      "showIf": {
-        "question": "welk type appartement heeft u?",
-        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
       }
     },
     {
