@@ -130,17 +130,29 @@ const DynamicForm = ({ instanceId, settings }) => {
     }
   };
 
+  const shouldShowQuestion = (item, index) => {
+    if (!item.showIf) return true;
+
+    const dependentQuestionIndex = formData.findIndex(
+      q => q.question === item.showIf.question
+    );
+    const dependentQuestionId = `question_${dependentQuestionIndex}`;
+    return formResponses[dependentQuestionId] === item.showIf.equals;
+  };
+
   return (
     <div className="energy-calculator-form-container">
       <FormHeader />
       <form onSubmit={handleSubmit} className="dynamic-form">
         {formData.map((item, index) => (
-          <div key={index} className="energy-calculator-form-group">
-            <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
-              {item.question}
-            </label>
-            {renderFormField(item, index)}
-          </div>
+          shouldShowQuestion(item, index) && (
+            <div key={index} className="energy-calculator-form-group">
+              <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
+                {item.question}
+              </label>
+              {renderFormField(item, index)}
+            </div>
+          )
         ))}
         <button type="submit" className="energy-calculator-submit-button">
           Bereken Energielabel

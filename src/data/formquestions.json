@@ -12,6 +12,21 @@
       "choices": ["Vrijstaande woning", "Hoekwoning", "Tussenwoning", "Appartement"]
     },
     {
+      "question": "Type appartement:",
+      "inputType": "select",
+      "placeholder": "Selecteer type appartement...",
+      "choices": [
+        "Hoekappartement met dak",
+        "Hoekappartement zonder dak",
+        "Tussenappartement met dak",
+        "Tussenappartement zonder dak"
+      ],
+      "showIf": {
+        "question": "Woningsoort:",
+        "equals": "Appartement"
+      }
+    },
+    {
       "question": "Oppervlakte:",
       "inputType": "number",
       "placeholder": "m²"
