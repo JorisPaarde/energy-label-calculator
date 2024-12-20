@@ -4,3 +4,26 @@
 @use 'components/form';
 @use 'components/inputs';
 @use 'components/buttons'; 
+
+// Animation classes for form fields
+.form-field-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.form-field-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in, transform 300ms ease-out;
+}
+
+.form-field-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-field-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms ease-in, transform 300ms ease-out;
+} 
