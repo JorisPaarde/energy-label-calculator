@@ -1,18 +1,24 @@
 {
   "questions": [
     {
-      "question": "Bouwjaar van je woning:",
-      "inputType": "number",
-      "placeholder": "bijv. 1980"
+      "question": "In welk jaar is uw woning gebouwd?",
+      "inputType": "select",
+      "choices": [
+        "Vóór 1945",
+        "1945-1975",
+        "1975-1990",
+        "1990-2005",
+        "2005-heden"
+      ]
     },
     {
-      "question": "Woningsoort:",
+      "question": "wat voor soort woning heeft u?",
       "inputType": "select",
       "placeholder": "Selecteer een woningsoort...",
       "choices": ["Vrijstaande woning", "Hoekwoning", "Tussenwoning", "Appartement"]
     },
     {
-      "question": "Type appartement:",
+      "question": "welk type appartement heeft u?",
       "inputType": "select",
       "placeholder": "Selecteer type appartement...",
       "choices": [
@@ -27,12 +33,12 @@
       }
     },
     {
-      "question": "Oppervlakte:",
+      "question": "wat is de oppervlakte van uw woning?",
       "inputType": "number",
       "placeholder": "m²"
     },
     {
-      "question": "Glas:",
+      "question": "Welk type glas heeft u?",
       "inputType": "select",
       "choices": ["Enkelglas", "Dubbelglas", "HR glas", "HR+ /++ /+++ glas"]
     },
@@ -52,7 +58,7 @@
       ]
     },
     {
-      "question": "Dakisolatie:",
+      "question": "Hoe goed is de isolatie van uw dak?",
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
@@ -63,7 +69,7 @@
       }
     },
     {
-      "question": "Gevelisolatie:",
+      "question": "hoeveel is de isolatie van uw gevel?",
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
@@ -72,7 +78,7 @@
       }
     },
     {
-      "question": "Vloerisolatie:",
+      "question": "hoe goed is de isolatie van uw vloer?",
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
@@ -81,33 +87,34 @@
       }
     },
     {
-      "question": "Verwarming:",
+      "question": "welk type verwarming heeft u?",
       "inputType": "select",
       "choices": ["Moederhaard / Gaskachel", "CV-ketel voor 2000", "CV-ketel 2000-2020", "CV-ketel na 2020", "Warmtepomp"]
     },
     {
-      "question": "Warmwatervoorziening:",
+      "question": "welk type warmwatervoorziening heeft u?",
       "inputType": "select",
       "choices": ["Oude gasboiler", "Nieuwe gasboiler", "Elektrische boiler", "Zonneboiler", "Combiketel"]
     },
     {
-      "question": "Ventilatiesysteem:",
+      "question": "welk type ventilatiesysteem heeft u?",
       "inputType": "select",
       "choices": ["Natuurlijke ventilatie", "Mechanische afzuiging", "Gebalanceerde ventilatie", "Gebalanceerde ventilatie met WTW"]
     },
     {
-      "question": "Zonnepanelen:",
+      "question": "heeft u zonnepanelen?",
       "inputType": "select",
       "choices": ["Nee", "Ja, minder dan 6", "Ja, 6 tot 10", "Ja, 10 of meer"]
     },
     {
-      "question": "Aanvullende energiebesparende maatregelen:",
+      "question": "welke aanvullende energiebesparende maatregelen heeft u?",
       "inputType": "checkbox",
       "choices": [
         "Energiezuinige verlichting (LED)",
         "Slimme thermostaat",
         "Tochtstrips",
-        "Radiatorfolie"
+        "Radiatorfolie",
+        "Geen"
       ]
     }
   ]
