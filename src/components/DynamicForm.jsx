@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import defaultFormData from '../data/formquestions.json';
 import FormHeader from './FormHeader';
@@ -7,9 +7,13 @@ import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
 import FormFields from './FormFields';
 
 const DynamicForm = ({ instanceId, settings }) => {
+  const ANIMATION_DURATION = 500; // Consistent animation duration
+  const HEADER_OFFSET = 100; // Adjust this value based on your header height
   const formData = settings?.formData 
     ? JSON.parse(settings.formData).questions 
     : defaultFormData.questions;
+
+  const formContainerRef = useRef(null);
 
   // Initialize form responses with empty values
   const initializeFormResponses = () => {
@@ -26,6 +30,10 @@ const DynamicForm = ({ instanceId, settings }) => {
   };
 
   const [formResponses, setFormResponses] = useState(initializeFormResponses());
+  const [calculationState, setCalculationState] = useState({
+    isCalculating: false,
+    result: null
+  });
 
   // Reset form when formData changes
   useEffect(() => {
@@ -41,15 +49,33 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCalculationState({ isCalculating: true, result: null });
     
     // Calculate the energy label
     const result = calculateEnergyLabel(formResponses);
     
-    // Log the result
-    console.log('Energy Label Result:', result);
-    
-    // You can show the result to the user here
-    alert(`Calculated Energy Label: ${result.label}\n${result.details}`);
+    // Scroll with header offset (adding instead of subtracting)
+    if (formContainerRef.current) {
+      const elementPosition = formContainerRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset + HEADER_OFFSET;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    setTimeout(() => {
+      setCalculationState({
+        isCalculating: false,
+        result: result
+      });
+    }, ANIMATION_DURATION);
+  };
+
+  const handleReset = () => {
+    setCalculationState({ isCalculating: false, result: null });
+    setFormResponses(initializeFormResponses());
   };
 
   const findQuestionByText = (questionText) => {
@@ -166,38 +192,70 @@ const DynamicForm = ({ instanceId, settings }) => {
   };
 
   return (
-    <div className="energy-calculator-form-container">
+    <div className="energy-calculator-form-container" ref={formContainerRef}>
       <FormHeader />
-      <form onSubmit={handleSubmit} className="dynamic-form">
-        <TransitionGroup>
-          {formData.map((item, index) => (
-            shouldShowQuestion(item, index) && (
-              <CSSTransition
-                key={index}
-                timeout={300}
-                classNames="form-field"
-                unmountOnExit
-              >
-                <div className="energy-calculator-form-group">
-                  <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
-                    {item.question}
-                  </label>
-                  <FormFields
-                    item={item}
-                    index={index}
-                    formResponses={formResponses}
-                    handleInputChange={handleInputChange}
-                    shouldShowQuestion={shouldShowQuestion}
-                  />
-                </div>
-              </CSSTransition>
-            )
-          ))}
-        </TransitionGroup>
-        <button type="submit" className="energy-calculator-submit-button">
-          Bereken Energielabel
-        </button>
-      </form>
+      <div className="form-content-wrapper">
+        <CSSTransition
+          in={!calculationState.result}
+          timeout={ANIMATION_DURATION}
+          classNames="form-fade"
+          unmountOnExit
+        >
+          <form onSubmit={handleSubmit} className={`dynamic-form ${calculationState.isCalculating ? 'calculating' : ''}`}>
+            <TransitionGroup>
+              {formData.map((item, index) => (
+                shouldShowQuestion(item, index) && (
+                  <CSSTransition
+                    key={index}
+                    timeout={ANIMATION_DURATION}
+                    classNames="form-field"
+                    unmountOnExit
+                  >
+                    <div className="energy-calculator-form-group">
+                      <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
+                        {item.question}
+                      </label>
+                      <FormFields
+                        item={item}
+                        index={index}
+                        formResponses={formResponses}
+                        handleInputChange={handleInputChange}
+                        shouldShowQuestion={shouldShowQuestion}
+                      />
+                    </div>
+                  </CSSTransition>
+                )
+              ))}
+            </TransitionGroup>
+            <button type="submit" className="energy-calculator-submit-button">
+              Bereken Energielabel
+            </button>
+          </form>
+        </CSSTransition>
+
+        <CSSTransition
+          in={calculationState.result !== null}
+          timeout={ANIMATION_DURATION}
+          classNames="result-fade"
+          unmountOnExit
+        >
+          <div className="energy-calculator-result">
+            <h2>Berekend Energielabel</h2>
+            <div className="energy-label-display">
+              <span className="label">{calculationState.result?.label}</span>
+            </div>
+            <div className="result-details">
+              {calculationState.result?.details}
+            </div>
+            <button 
+              onClick={handleReset}
+              className="energy-calculator-reset-button"
+            >
+              Nieuwe Berekening
+            </button>
+          </div>
+        </CSSTransition>
+      </div>
     </div>
   );
 };
