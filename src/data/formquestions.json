@@ -56,10 +56,10 @@
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
-        "question": "Type appartement:",
-        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"],
-        "andQuestion": "Welke typen is?",
-        "contains": "Dakisolatie"
+        "question": "Welke typen isolatie heeft je woning?",
+        "contains": "Dakisolatie",
+        "andQuestion": "Type appartement:",
+        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
       }
     },
     {
@@ -67,7 +67,7 @@
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
-        "question": "Welke typen is?",
+        "question": "Welke typen isolatie heeft je woning?",
         "contains": "Gevelisolatie"
       }
     },
@@ -76,7 +76,7 @@
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
-        "question": "Welke typen is?",
+        "question": "Welke typen isolatie heeft je woning?",
         "contains": "Vloerisolatie"
       }
     },

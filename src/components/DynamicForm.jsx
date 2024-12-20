@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import defaultFormData from '../data/formquestions.json';
 import FormHeader from './FormHeader';
 import '@styles/main.scss';
+import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
 
 const DynamicForm = ({ instanceId, settings }) => {
   const formData = settings?.formData 
@@ -38,9 +39,15 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form responses:', formResponses);
-    // Here you can add your form submission logic
-    alert('Form submitted! Check console for responses.');
+    
+    // Calculate the energy label
+    const result = calculateEnergyLabel(formResponses);
+    
+    // Log the result
+    console.log('Energy Label Result:', result);
+    
+    // You can show the result to the user here
+    alert(`Calculated Energy Label: ${result.label}\n${result.details}`);
   };
 
   const renderFormField = (item, index) => {
@@ -165,7 +172,8 @@ const DynamicForm = ({ instanceId, settings }) => {
 
     // Check contains condition (for checkboxes)
     if (item.showIf.contains) {
-      result = result && formResponses[dependentQuestionId]?.includes(item.showIf.contains);
+      const checkboxValues = formResponses[dependentQuestionId] || [];
+      result = result && checkboxValues.includes(item.showIf.contains);
     }
 
     // Check additional condition if andQuestion exists
@@ -175,12 +183,39 @@ const DynamicForm = ({ instanceId, settings }) => {
       );
       const andQuestionId = `question_${andQuestionIndex}`;
       
-      if (item.showIf.contains) {
-        result = result && formResponses[andQuestionId]?.includes(item.showIf.contains);
+      if (item.showIf.notEquals) {
+        const notEqualsArray = Array.isArray(item.showIf.notEquals) 
+          ? item.showIf.notEquals 
+          : [item.showIf.notEquals];
+        result = result && !notEqualsArray.includes(formResponses[andQuestionId]);
       }
     }
 
     return result;
+  };
+
+  const evaluateConditions = (conditions) => {
+    // Handle single condition object or array of conditions
+    const conditionsArray = Array.isArray(conditions) ? conditions : [conditions];
+    
+    // All conditions must be true (AND logic)
+    return conditionsArray.every(condition => {
+      const dependentQuestionIndex = formData.findIndex(
+        q => q.question === condition.question
+      );
+      
+      if (dependentQuestionIndex === -1) {
+        console.warn(`Question not found: ${condition.question}`);
+        return true;
+      }
+
+      const dependentQuestionId = `question_${dependentQuestionIndex}`;
+      const dependentValue = formResponses[dependentQuestionId];
+
+      switch (condition.type) {
+        // ... existing cases ...
+      }
+    });
   };
 
   return (
