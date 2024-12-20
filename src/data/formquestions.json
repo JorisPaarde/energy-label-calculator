@@ -39,7 +39,11 @@
     {
       "question": "Dakisolatie:",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "showIf": {
+        "question": "Type appartement:",
+        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
+      }
     },
     {
       "question": "Gevelisolatie:",

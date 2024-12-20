@@ -137,7 +137,19 @@ const DynamicForm = ({ instanceId, settings }) => {
       q => q.question === item.showIf.question
     );
     const dependentQuestionId = `question_${dependentQuestionIndex}`;
-    return formResponses[dependentQuestionId] === item.showIf.equals;
+    
+    if (item.showIf.equals) {
+      return formResponses[dependentQuestionId] === item.showIf.equals;
+    }
+    
+    if (item.showIf.notEquals) {
+      const notEqualsArray = Array.isArray(item.showIf.notEquals) 
+        ? item.showIf.notEquals 
+        : [item.showIf.notEquals];
+      return !notEqualsArray.includes(formResponses[dependentQuestionId]);
+    }
+
+    return true;
   };
 
   return (
