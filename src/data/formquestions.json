@@ -37,23 +37,48 @@
       "choices": ["Enkelglas", "Dubbelglas", "HR glas", "HR+ /++ /+++ glas"]
     },
     {
+      "question": "Welke typen isolatie heeft je woning?",
+      "inputType": "checkbox",
+      "choices": [
+        {
+          "value": "Dakisolatie",
+          "showIf": {
+            "question": "Type appartement:",
+            "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
+          }
+        },
+        "Gevelisolatie",
+        "Vloerisolatie"
+      ]
+    },
+    {
       "question": "Dakisolatie:",
       "inputType": "select",
       "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
       "showIf": {
         "question": "Type appartement:",
-        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"]
+        "notEquals": ["Hoekappartement zonder dak", "Tussenappartement zonder dak"],
+        "andQuestion": "Welke typen is?",
+        "contains": "Dakisolatie"
       }
     },
     {
       "question": "Gevelisolatie:",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "showIf": {
+        "question": "Welke typen is?",
+        "contains": "Gevelisolatie"
+      }
     },
     {
       "question": "Vloerisolatie:",
       "inputType": "select",
-      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"]
+      "choices": ["Geen na-isolatie", "Matige isolatie", "Goede isolatie"],
+      "showIf": {
+        "question": "Welke typen is?",
+        "contains": "Vloerisolatie"
+      }
     },
     {
       "question": "Verwarming:",

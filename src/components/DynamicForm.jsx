@@ -103,25 +103,35 @@ const DynamicForm = ({ instanceId, settings }) => {
       case 'checkbox':
         return (
           <div className="energy-calculator-checkbox-group">
-            {item.choices.map((choice, choiceIndex) => (
-              <label key={choiceIndex} className="energy-calculator-checkbox-label">
-                <input
-                  type="checkbox"
-                  name={questionId}
-                  value={choice}
-                  checked={formResponses[questionId]?.includes(choice)}
-                  onChange={(e) => {
-                    const currentValues = formResponses[questionId] || [];
-                    const newValues = e.target.checked
-                      ? [...currentValues, choice]
-                      : currentValues.filter(v => v !== choice);
-                    handleInputChange(questionId, newValues);
-                  }}
-                  className="energy-calculator-checkbox-input"
-                />
-                {choice}
-              </label>
-            ))}
+            {item.choices.map((choice, choiceIndex) => {
+              // Handle conditional choices
+              if (typeof choice === 'object' && choice.showIf) {
+                if (!shouldShowQuestion({ showIf: choice.showIf }, index)) {
+                  return null;
+                }
+                choice = choice.value;
+              }
+
+              return (
+                <label key={choiceIndex} className="energy-calculator-checkbox-label">
+                  <input
+                    type="checkbox"
+                    name={questionId}
+                    value={choice}
+                    checked={formResponses[questionId]?.includes(choice)}
+                    onChange={(e) => {
+                      const currentValues = formResponses[questionId] || [];
+                      const newValues = e.target.checked
+                        ? [...currentValues, choice]
+                        : currentValues.filter(v => v !== choice);
+                      handleInputChange(questionId, newValues);
+                    }}
+                    className="energy-calculator-checkbox-input"
+                  />
+                  {choice}
+                </label>
+              );
+            })}
           </div>
         );
 
@@ -138,18 +148,39 @@ const DynamicForm = ({ instanceId, settings }) => {
     );
     const dependentQuestionId = `question_${dependentQuestionIndex}`;
     
+    let result = true;
+
+    // Check equals condition
     if (item.showIf.equals) {
-      return formResponses[dependentQuestionId] === item.showIf.equals;
+      result = result && (formResponses[dependentQuestionId] === item.showIf.equals);
     }
     
+    // Check notEquals condition
     if (item.showIf.notEquals) {
       const notEqualsArray = Array.isArray(item.showIf.notEquals) 
         ? item.showIf.notEquals 
         : [item.showIf.notEquals];
-      return !notEqualsArray.includes(formResponses[dependentQuestionId]);
+      result = result && !notEqualsArray.includes(formResponses[dependentQuestionId]);
     }
 
-    return true;
+    // Check contains condition (for checkboxes)
+    if (item.showIf.contains) {
+      result = result && formResponses[dependentQuestionId]?.includes(item.showIf.contains);
+    }
+
+    // Check additional condition if andQuestion exists
+    if (item.showIf.andQuestion) {
+      const andQuestionIndex = formData.findIndex(
+        q => q.question === item.showIf.andQuestion
+      );
+      const andQuestionId = `question_${andQuestionIndex}`;
+      
+      if (item.showIf.contains) {
+        result = result && formResponses[andQuestionId]?.includes(item.showIf.contains);
+      }
+    }
+
+    return result;
   };
 
   return (
