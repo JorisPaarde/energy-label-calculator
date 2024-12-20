@@ -1,77 +1,79 @@
 $animation-duration: 500ms;
 $animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
 
-// Form field animations
-.form-field-enter {
-  opacity: 0;
-  transform: translateY(-20px);
-}
+.energy-calculator-widget {
+  // Form field animations
+  .energy-calculator-form-field-enter {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 
-.form-field-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
-}
+  .energy-calculator-form-field-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 
-.form-field-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
+  .energy-calculator-form-field-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.form-field-exit-active {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
-}
+  .energy-calculator-form-field-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 
-// Form fade animations
-.form-fade-enter {
-  opacity: 0;
-  transform: translateY(-40px);
-}
+  // Form fade animations
+  .energy-calculator-form-fade-enter {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
 
-.form-fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
-}
+  .energy-calculator-form-fade-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 
-.form-fade-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
+  .energy-calculator-form-fade-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.form-fade-exit-active {
-  opacity: 0;
-  transform: translateY(-40px);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
-}
+  .energy-calculator-form-fade-exit-active {
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 
-// Result fade animations
-.result-fade-enter {
-  opacity: 0;
-  transform: translate(-50%, -45%);
-}
+  // Result fade animations
+  .energy-calculator-result-fade-enter {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
 
-.result-fade-enter-active {
-  opacity: 1;
-  transform: translate(-50%, -50%);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
-}
+  .energy-calculator-result-fade-enter-active {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 
-.result-fade-exit {
-  opacity: 1;
-  transform: translate(-50%, -50%);
-}
+  .energy-calculator-result-fade-exit {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 
-.result-fade-exit-active {
-  opacity: 0;
-  transform: translate(-50%, -55%);
-  transition: opacity $animation-duration $animation-timing,
-              transform $animation-duration $animation-timing;
+  .energy-calculator-result-fade-exit-active {
+    opacity: 0;
+    transform: translate(-50%, -55%);
+    transition: opacity $animation-duration $animation-timing,
+                transform $animation-duration $animation-timing;
+  }
 } 

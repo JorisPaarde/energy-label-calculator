@@ -2,13 +2,6 @@
 @use '../abstracts/mixins' as *;
 
 .energy-calculator-widget {
-  all: initial;
-  box-sizing: border-box;
-  
-  * {
-    box-sizing: inherit;
-  }
-
   // Force our styles to take precedence over WordPress
   font-family: $font-family-base;
   font-size: $font-size-base;
@@ -20,4 +13,10 @@
   border: 0;
   vertical-align: baseline;
   background: transparent;
+  all: initial;
+  box-sizing: border-box;
+  
+  * {
+    box-sizing: inherit;
+  }
 } 
