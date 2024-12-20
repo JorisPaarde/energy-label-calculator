@@ -101,11 +101,6 @@
       "choices": ["Nee", "Ja, minder dan 6", "Ja, 6 tot 10", "Ja, 10 of meer"]
     },
     {
-      "question": "Zonneboiler:",
-      "inputType": "radio",
-      "choices": ["Nee", "Ja"]
-    },
-    {
       "question": "Aanvullende energiebesparende maatregelen:",
       "inputType": "checkbox",
       "choices": [
