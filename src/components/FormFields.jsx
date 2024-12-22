@@ -11,7 +11,6 @@ export const FormFields = ({
 
   switch (item.inputType.toLowerCase()) {
     case 'text':
-    case 'number':
     case 'email':
       return (
         <input
@@ -19,6 +18,29 @@ export const FormFields = ({
           id={questionId}
           value={formResponses[questionId]}
           onChange={(e) => handleInputChange(questionId, e.target.value)}
+          className="energy-calculator-form-input"
+          placeholder={item.placeholder}
+          required
+        />
+      );
+
+    case 'number':
+      return (
+        <input
+          type={item.inputType}
+          id={questionId}
+          value={formResponses[questionId]}
+          onChange={(e) => handleInputChange(questionId, e.target.value)}
+          onFocus={(e) => {
+            if (e.target.value === '0') {
+              handleInputChange(questionId, '');
+            }
+          }}
+          onBlur={(e) => {
+            if (e.target.value === '') {
+              handleInputChange(questionId, '0');
+            }
+          }}
           className="energy-calculator-form-input"
           placeholder={item.placeholder}
           required
