@@ -147,7 +147,7 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
             })}
           </div>
         </div>
-        <div className="energy-calculator-result-details" style={{
+        {/* <div className="energy-calculator-result-details" style={{
           backgroundColor: 'white',
           padding: '2rem',
           borderRadius: '8px',
@@ -163,7 +163,7 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
         <button onClick={onReset} className="energy-calculator-reset-button" style={{
           marginTop: '2rem'
         }}>
