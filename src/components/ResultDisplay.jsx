@@ -71,12 +71,12 @@ const ResultDisplay = ({ result, onReset }) => {
 
   return (
     <div ref={resultRef} className={`energy-calculator-result ${isVisible ? 'visible' : ''}`}>
-      <h2>Berekend Energielabel</h2>
+      <h2>Uw Energielabel indicatie</h2>
       <div className="result-chart-container">
         <div className="energy-label-bars">
           {ENERGY_LABELS.map((label, index) => {
-            const baseHeight = 20;
-            const increment = 8;
+            const baseHeight = window.innerWidth <= 768 ? 16 : 20;
+            const increment = window.innerWidth <= 768 ? 6.4 : 8;
             const height = baseHeight + (index * increment);
             const isColored = index <= animatedIndex;
             const barColor = getBarColor(label, result?.label);
