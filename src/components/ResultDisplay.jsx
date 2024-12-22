@@ -77,17 +77,20 @@ const ResultDisplay = ({ result, onReset }) => {
         justifyContent: 'center',
         margin: '40px auto',
         width: '100%',
-        height: '300px'
+        height: '300px',
+        perspective: '1000px'
       }}>
         <div className="energy-label-bars" style={{ 
           display: 'flex',
           alignItems: 'flex-end',
-          gap: '4px',
+          gap: '8px',
           height: '100%',
           width: '100%',
           maxWidth: '800px',
           justifyContent: 'center',
-          padding: '0 1rem'
+          padding: '0 1rem',
+          transform: 'rotateX(10deg)',
+          transformStyle: 'preserve-3d'
         }}>
           {ENERGY_LABELS.map((label, index) => {
             const baseHeight = 20;
@@ -95,11 +98,12 @@ const ResultDisplay = ({ result, onReset }) => {
             const height = baseHeight + (index * increment);
             const isColored = index <= animatedIndex;
             const barColor = getBarColor(label, result?.label);
+            const isActive = result?.label === label;
             
             return (
               <div 
                 key={label}
-                className={`energy-label-bar ${result?.label === label ? 'active' : ''}`}
+                className={`energy-label-bar ${isActive ? 'active' : ''}`}
                 style={{ 
                   backgroundColor: barColor,
                   height: `${height}%`,
@@ -110,18 +114,38 @@ const ResultDisplay = ({ result, onReset }) => {
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
                   alignItems: 'center',
-                  transition: 'all 0.3s ease',
-                  transform: result?.label === label ? 'scale(1, 1.02)' : 'none',
+                  transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transform: isActive ? 'scale(1, 1.05) translateZ(20px)' : 'translateZ(0)',
                   transformOrigin: 'bottom center',
-                  borderRadius: '4px 4px 0 0'
+                  borderRadius: '12px 12px 8px 8px',
+                  boxShadow: isActive 
+                    ? '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 0, 0, 0.05)'
+                    : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+                  backdropFilter: 'blur(8px)',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '40%',
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%)',
+                    borderRadius: '12px 12px 0 0',
+                    opacity: isColored ? 1 : 0,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                />
                 <div className="energy-label-text-container" style={{
                   marginTop: '8px',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  backgroundColor: isColored ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                  padding: '6px 10px',
+                  borderRadius: '8px',
                   transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(4px)',
+                  textShadow: isColored ? '0 1px 2px rgba(0, 0, 0, 0.2)' : 'none'
                 }}>
                   {label.includes('+') ? (
                     <div style={{
@@ -131,7 +155,7 @@ const ResultDisplay = ({ result, onReset }) => {
                       gap: '2px'
                     }}>
                       <span className="energy-label-text" style={{
-                        color: isColored ? barColor : 'var(--grey-600)',
+                        color: isColored ? '#FFFFFF' : '#000000',
                         fontWeight: isColored ? '600' : '400',
                         transition: 'all 0.3s ease',
                       }}>A</span>
@@ -140,7 +164,7 @@ const ResultDisplay = ({ result, onReset }) => {
                           key={i}
                           className="energy-label-text" 
                           style={{
-                            color: isColored ? barColor : 'var(--grey-600)',
+                            color: isColored ? '#FFFFFF' : '#000000',
                             fontWeight: isColored ? '600' : '400',
                             transition: 'all 0.3s ease',
                             fontSize: '0.9em',
@@ -153,7 +177,7 @@ const ResultDisplay = ({ result, onReset }) => {
                     </div>
                   ) : (
                     <span className="energy-label-text" style={{
-                      color: isColored ? barColor : 'var(--grey-600)',
+                      color: isColored ? '#FFFFFF' : '#000000',
                       fontWeight: isColored ? '600' : '400',
                       transition: 'all 0.3s ease',
                     }}>{label}</span>
