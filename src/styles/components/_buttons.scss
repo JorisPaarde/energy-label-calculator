@@ -1,19 +1,93 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
-.energy-calculator {
-  &-submit-button {
-    @include button-base;
-    margin-top: $spacing-xl;
+// Common button styles mixin
+@mixin apple-button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: 980px; // Apple's typical rounded pill style
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--primary);
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
 
-    &:hover {
-      background: $color-primary-dark;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px -1px rgba($color-primary, 0.2);
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    border-radius: inherit;
+    transition: opacity 0.3s ease;
+  }
 
-    &:active {
-      transform: translateY(0);
+  &:hover {
+    transform: translateY(-1px) scale(1.02);
+    background: var(--primary-dark);
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.2),
+                0 4px 8px -4px rgba(0, 0, 0, 0.1);
+
+    &::before {
+      opacity: 0.8;
     }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// Primary action button (Calculate)
+.energy-calculator-submit-button {
+  @include apple-button-base;
+  margin: 2rem auto 0;
+  padding: 1rem 2.5rem;
+  min-width: 240px;
+  background: var(--primary);
+  display: block;
+}
+
+// Reset button (secondary action)
+.energy-calculator-reset-button {
+  @include apple-button-base;
+  background: var(--grey-200);
+  color: var(--text-primary);
+  font-weight: 400;
+  min-width: 180px;
+  margin: 2rem auto 0;
+
+  &:hover {
+    background: var(--grey-300);
+  }
+
+  &::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
   }
 } 
