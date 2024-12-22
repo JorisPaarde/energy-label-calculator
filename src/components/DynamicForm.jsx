@@ -27,6 +27,16 @@ const DynamicForm = ({ instanceId, settings }) => {
     formData.forEach((item, index) => {
       const questionId = `question_${index}`;
       
+      // Skip setting default values for conditional questions that shouldn't be shown initially
+      if (item.showIf) {
+        const dependentQuestionId = formData.findIndex(q => q.question === item.showIf.question);
+        if (dependentQuestionId !== -1) {
+          // For questions with showIf condition, don't set an initial value
+          initialResponses[questionId] = '';
+          return;
+        }
+      }
+      
       if (item.inputType === 'checkbox') {
         initialResponses[questionId] = [];
       } else if (item.inputType === 'select' || item.inputType === 'radio') {
@@ -98,7 +108,23 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   const shouldShowQuestion = (item) => {
     if (!item.showIf) return true;
-    // ... rest of shouldShowQuestion logic ...
+    
+    const dependentQuestionId = formData.findIndex(q => q.question === item.showIf.question);
+    if (dependentQuestionId === -1) return true;
+    
+    const dependentResponse = formResponses[`question_${dependentQuestionId}`];
+    
+    if (item.showIf.equals) {
+      return dependentResponse === item.showIf.equals;
+    }
+    
+    if (item.showIf.notEquals) {
+      if (Array.isArray(item.showIf.notEquals)) {
+        return !item.showIf.notEquals.includes(dependentResponse);
+      }
+      return dependentResponse !== item.showIf.notEquals;
+    }
+    
     return true;
   };
 
