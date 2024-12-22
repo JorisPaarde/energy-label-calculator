@@ -1,7 +1,6 @@
 import formData from '../data/formquestions.json';
 
 export const calculateEnergyLabel = (formResponses) => {
-  let totalScore = 0;
   let details = [];
 
   // Helper function to get value from answers object
@@ -30,105 +29,132 @@ export const calculateEnergyLabel = (formResponses) => {
     return formResponses[`question_${questionIndex}`];
   };
 
-  // Calculate bonus points for efficient combinations
-  const calculateBonus = () => {
-    let bonus = 0;
-
-    // Get key responses
-    const heating = getQuestionResponse("Welk type verwarming heeft u?");
-    const ventilation = getQuestionResponse("Welk type ventilatiesysteem heeft u?");
-    const solarPanels = getQuestionResponse("Heeft u zonnepanelen?");
-    const glass = getQuestionResponse("Welk type glas heeft u?");
+  // Calculate base score
+  const calculateBaseScore = () => {
+    let baseScore = 0;
     const buildingYear = getQuestionResponse("In welk jaar is uw woning gebouwd?");
+    const houseType = getQuestionResponse("Wat voor soort woning heeft u?");
+    const apartmentType = getQuestionResponse("Welk type appartement heeft u?");
+    const size = getQuestionResponse("Wat is de gebruiksoppervlakte van uw woning?");
 
-    // Bonus for complete insulation package
-    const hasGoodInsulation = ['dak', 'gevel', 'vloer'].every(type => {
-      const response = getQuestionResponse(`Hoe goed is de isolatie van uw ${type}?`);
-      return response?.includes('Goede isolatie');
-    });
-    if (hasGoodInsulation) {
-      bonus += 100;
-      if (buildingYear === "Vóór 1945" || buildingYear === "1945-1975") {
-        bonus += 50; // Extra bonus for well-insulated older buildings
-      }
+    // Get building year score
+    const yearQuestion = formData.questions.find(q => q.question === "In welk jaar is uw woning gebouwd?");
+    baseScore += getAnswerValue(yearQuestion, buildingYear);
+
+    // Get house type score
+    const typeQuestion = formData.questions.find(q => q.question === "Wat voor soort woning heeft u?");
+    baseScore += getAnswerValue(typeQuestion, houseType);
+
+    // Add apartment type score if applicable
+    if (houseType === "Appartement" && apartmentType) {
+      const apartmentQuestion = formData.questions.find(q => q.question === "Welk type appartement heeft u?");
+      baseScore += getAnswerValue(apartmentQuestion, apartmentType);
     }
 
-    // Sustainable heating and ventilation combination
-    if (heating?.includes('Warmtepomp') && ventilation?.includes('WTW')) {
-      bonus += 150;
-    }
+    // Apply size factor
+    const sizeQuestion = formData.questions.find(q => q.question === "Wat is de gebruiksoppervlakte van uw woning?");
+    const sizeFactor = calculateRangeScore(size, sizeQuestion.scoring.ranges);
+    baseScore *= sizeFactor;
 
-    // Solar panels with heat pump
-    if (heating?.includes('Warmtepomp') && solarPanels && solarPanels !== "Nee") {
-      bonus += 100;
-    }
-
-    // Modern glass in older buildings
-    if ((buildingYear === "Vóór 1945" || buildingYear === "1945-1975") && 
-        (glass?.includes('HR++') || glass?.includes('HR+++'))) {
-      bonus += 75;
-    }
-
-    // Complete energy efficiency package
-    const hasCompletePackage = heating?.includes('Warmtepomp') && 
-                              ventilation?.includes('WTW') &&
-                              hasGoodInsulation &&
-                              solarPanels !== "Nee";
-    if (hasCompletePackage) {
-      bonus += 200;
-    }
-
-    return bonus;
+    details.push(`Basisscore: ${Math.round(baseScore)} punten`);
+    return baseScore;
   };
 
-  // Calculate base scores from questions
-  formData.questions.forEach((question, index) => {
-    const response = formResponses[`question_${index}`];
-    if (!response) return;
+  // Calculate insulation score
+  const calculateInsulationScore = () => {
+    let insulationScore = 0;
+    const buildingYear = getQuestionResponse("In welk jaar is uw woning gebouwd?");
+    const yearQuestion = formData.questions.find(q => q.question === "In welk jaar is uw woning gebouwd?");
+    const yearFactor = yearQuestion.metadata.insulation_factor[buildingYear];
 
-    let questionScore = 0;
-
-    if (question.inputType === 'number' && question.scoring?.ranges) {
-      questionScore = calculateRangeScore(response, question.scoring.ranges);
-    }
-    else if (question.inputType === 'checkbox') {
-      if (Array.isArray(response)) {
-        questionScore = response.reduce((sum, answer) => 
-          sum + getAnswerValue(question, answer), 0);
+    // Sum up insulation scores
+    const insulationQuestions = formData.questions.filter(q => q.metadata?.type === "insulation_score");
+    insulationQuestions.forEach(question => {
+      const response = getQuestionResponse(question.question);
+      if (response) {
+        insulationScore += getAnswerValue(question, response);
       }
-    }
-    else {
-      questionScore = getAnswerValue(question, response);
+    });
+
+    // Apply building year factor and weight
+    insulationScore *= yearFactor;
+    insulationScore *= 1.5; // insulation weight factor
+
+    details.push(`Isolatiescore: ${Math.round(insulationScore)} punten`);
+    return insulationScore;
+  };
+
+  // Calculate installation score
+  const calculateInstallationScore = () => {
+    let installationScore = 0;
+    const heating = getQuestionResponse("Welk type verwarming heeft u?");
+    const ventilation = getQuestionResponse("Welk type ventilatiesysteem heeft u?");
+
+    // Sum up installation scores
+    const installationQuestions = formData.questions.filter(q => q.metadata?.type === "installation_score");
+    installationQuestions.forEach(question => {
+      const response = getQuestionResponse(question.question);
+      if (response) {
+        installationScore += getAnswerValue(question, response);
+      }
+    });
+
+    // Apply bonus multipliers
+    if (heating === "Warmtepomp" && ventilation === "Gebalanceerde ventilatie met WTW") {
+      installationScore *= 1.2;
+      details.push("Bonus: Warmtepomp + WTW ventilatie (20%)");
+    } else if (heating === "Warmtepomp" && ventilation === "Gebalanceerde ventilatie") {
+      installationScore *= 1.1;
+      details.push("Bonus: Warmtepomp + gebalanceerde ventilatie (10%)");
     }
 
-    totalScore += questionScore;
-    if (questionScore > 0) {
-      details.push(`${question.question}: ${questionScore} punten`);
+    // Apply installation weight factor
+    installationScore *= 1.3;
+
+    details.push(`Installatiescore: ${Math.round(installationScore)} punten`);
+    return installationScore;
+  };
+
+  // Calculate renewable score
+  const calculateRenewableScore = () => {
+    let renewableScore = 0;
+    const solarPanels = getQuestionResponse("Heeft u zonnepanelen?");
+    const waterHeating = getQuestionResponse("Welk type warmwatervoorziening heeft u?");
+
+    // Add solar panel score
+    const solarQuestion = formData.questions.find(q => q.metadata?.type === "renewable_score");
+    renewableScore += getAnswerValue(solarQuestion, solarPanels);
+
+    // Add solar water heater bonus
+    if (waterHeating === "Zonneboiler") {
+      renewableScore += 30;
+      details.push("Bonus: Zonneboiler (30 punten)");
     }
-  });
 
-  // Add bonus points
-  const bonus = calculateBonus();
-  totalScore += bonus;
-  if (bonus > 0) {
-    details.push(`Bonus voor energiezuinige combinaties: ${bonus} punten`);
-  }
+    details.push(`Duurzame energiescore: ${Math.round(renewableScore)} punten`);
+    return renewableScore;
+  };
 
-  // Ensure totalScore is a number
-  totalScore = Number(totalScore);
+  // Calculate total score
+  const baseScore = calculateBaseScore();
+  const insulationScore = calculateInsulationScore();
+  const installationScore = calculateInstallationScore();
+  const renewableScore = calculateRenewableScore();
+
+  const totalScore = Math.round(baseScore + insulationScore + installationScore + renewableScore);
 
   // Determine energy label based on total score
   let label;
-  if (totalScore >= 1200) label = 'A++++';
-  else if (totalScore >= 1000) label = 'A+++';
-  else if (totalScore >= 900) label = 'A++';
-  else if (totalScore >= 800) label = 'A+';
-  else if (totalScore >= 700) label = 'A';
-  else if (totalScore >= 600) label = 'B';
-  else if (totalScore >= 500) label = 'C';
-  else if (totalScore >= 400) label = 'D';
-  else if (totalScore >= 300) label = 'E';
-  else if (totalScore >= 200) label = 'F';
+  if (totalScore > 600) label = 'A++++';
+  else if (totalScore >= 550) label = 'A+++';
+  else if (totalScore >= 500) label = 'A++';
+  else if (totalScore >= 450) label = 'A+';
+  else if (totalScore >= 400) label = 'A';
+  else if (totalScore >= 350) label = 'B';
+  else if (totalScore >= 300) label = 'C';
+  else if (totalScore >= 250) label = 'D';
+  else if (totalScore >= 200) label = 'E';
+  else if (totalScore >= 150) label = 'F';
   else label = 'G';
 
   return {

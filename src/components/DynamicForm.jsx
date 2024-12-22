@@ -23,17 +23,41 @@ const DynamicForm = ({ instanceId, settings }) => {
     [formData.length]
   );
 
-  // Initialize form responses with empty values
+  // Initialize form responses with empty values or defaults
   const initializeFormResponses = () => {
     const initialResponses = {};
     formData.forEach((item, index) => {
       const questionId = `question_${index}`;
+      
       if (item.inputType === 'checkbox') {
         initialResponses[questionId] = [];
+      } else if (item.inputType === 'select' || item.inputType === 'radio') {
+        // For select/radio fields, use the first answer as default
+        if (item.answers) {
+          const firstAnswer = Object.keys(item.answers)[0];
+          initialResponses[questionId] = firstAnswer || '';
+        } else if (item.choices && item.choices.length > 0) {
+          initialResponses[questionId] = typeof item.choices[0] === 'object' 
+            ? item.choices[0].value 
+            : item.choices[0];
+        } else {
+          initialResponses[questionId] = '';
+        }
+      } else if (item.inputType === 'number') {
+        // For number inputs, use min value or 0 as default
+        if (item.scoring?.ranges && item.scoring.ranges.length > 0) {
+          const firstRange = item.scoring.ranges[0];
+          initialResponses[questionId] = firstRange.min || 0;
+        } else {
+          initialResponses[questionId] = item.min || 0;
+        }
       } else {
-        initialResponses[questionId] = '';
+        // For text inputs and others
+        initialResponses[questionId] = item.defaultValue || '';
       }
     });
+    
+    console.log('Initial form responses:', initialResponses);
     return initialResponses;
   };
 
@@ -62,9 +86,8 @@ const DynamicForm = ({ instanceId, settings }) => {
     const formAnswers = formData.reduce((acc, item, index) => {
       const questionId = `question_${index}`;
       const answer = formResponses[questionId];
-      if (answer && answer.length !== 0) {
-        acc[item.question] = answer;
-      }
+      // Include all answers, even empty ones
+      acc[item.question] = answer;
       return acc;
     }, {});
     
@@ -73,9 +96,12 @@ const DynamicForm = ({ instanceId, settings }) => {
     // Calculate the energy label
     const result = calculateEnergyLabel(formResponses);
     
+    // Add form answers to result
+    result.formAnswers = formAnswers;
+    
     setCalculationState({ 
       isCalculating: true, 
-      result: result  // Set the result immediately
+      result: result
     });
     
     // Scroll with header offset
@@ -92,7 +118,7 @@ const DynamicForm = ({ instanceId, settings }) => {
     setTimeout(() => {
       setCalculationState({
         isCalculating: false,
-        result: result  // Keep the same result after calculation
+        result: result
       });
     }, ANIMATION_DURATION);
   };

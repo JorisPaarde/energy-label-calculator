@@ -24,6 +24,7 @@
   .energy-calculator-form {
     width: 100%;
     position: relative;
+    z-index: 1;
   }
 
   .energy-calculator-result {
@@ -35,9 +36,10 @@
     text-align: center;
     padding: 2rem;
     width: 100%;
-    background: var(--background);
+    background: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 
     h2 {
       color: var(--text-primary);
