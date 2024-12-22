@@ -3,6 +3,7 @@ import '@styles/main.scss';
 
 const ENERGY_LABELS = ['F', 'E', 'D', 'C', 'B', 'A', 'A+', 'A++', 'A+++', 'A++++'];
 const ANIMATION_DELAY_PER_BAR = 100; // ms between each bar animation
+const TRANSITION_DURATION = 600; // match the CSS transition duration
 
 const LABEL_COLORS = {
   'F': 'var(--energy-red)',
@@ -20,14 +21,12 @@ const LABEL_COLORS = {
 const ResultDisplay = ({ result, onReset }) => {
   const [animatedIndex, setAnimatedIndex] = useState(-1);
   const [isVisible, setIsVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
   const resultRef = useRef(null);
   
   useEffect(() => {
     if (result) {
-      // Reset animations
-      setIsVisible(false);
-      setAnimatedIndex(-1);
-      
+      setShouldRender(true);
       // Start animations after a short delay
       setTimeout(() => {
         setIsVisible(true);
@@ -47,14 +46,21 @@ const ResultDisplay = ({ result, onReset }) => {
         for (let i = 0; i <= currentIndex; i++) {
           setTimeout(() => {
             setAnimatedIndex(i);
-          }, 500 + (i * ANIMATION_DELAY_PER_BAR)); // Start bar animations after fade-in
+          }, 500 + (i * ANIMATION_DELAY_PER_BAR));
         }
       }, 100);
-    } else {
-      setIsVisible(false);
-      setAnimatedIndex(-1);
     }
   }, [result]);
+
+  const handleReset = () => {
+    setIsVisible(false);
+    setAnimatedIndex(-1);
+    // Wait for the transition to complete before removing the component
+    setTimeout(() => {
+      setShouldRender(false);
+      onReset();
+    }, TRANSITION_DURATION);
+  };
 
   const getBarColor = (label, currentLabel) => {
     if (!currentLabel) return 'var(--grey-300)';
@@ -67,7 +73,7 @@ const ResultDisplay = ({ result, onReset }) => {
     return labelIndex <= currentIndex ? LABEL_COLORS[label] : 'var(--grey-300)';
   };
 
-  if (!result) return null;
+  if (!shouldRender) return null;
 
   return (
     <div ref={resultRef} className={`energy-calculator-result ${isVisible ? 'visible' : ''}`}>
@@ -116,7 +122,7 @@ const ResultDisplay = ({ result, onReset }) => {
           })}
         </div>
       </div>
-      <button onClick={onReset} className="energy-calculator-reset-button">
+      <button onClick={handleReset} className="energy-calculator-reset-button">
         Opnieuw Berekenen
       </button>
     </div>

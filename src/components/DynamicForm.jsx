@@ -104,7 +104,7 @@ const DynamicForm = ({ instanceId, settings }) => {
   return (
     <div className="energy-calculator-form-container" ref={formContainerRef}>
       <FormHeader />
-      <div className="energy-calculator-content-wrapper">
+      <div className={`energy-calculator-content-wrapper ${calculationState.result ? 'has-result' : ''}`}>
         <form 
           onSubmit={handleSubmit} 
           className={`energy-calculator-form ${calculationState.result ? 'has-result' : ''}`}
