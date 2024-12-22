@@ -1,3 +1,6 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
 .energy-calculator-widget {
   .energy-calculator-form-container {
     position: relative;
@@ -32,43 +35,110 @@
     text-align: center;
     padding: 2rem;
     width: 100%;
-    background: white;
+    background: var(--background);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    .energy-calculator-label-display {
-      font-size: 3rem;
-      font-weight: bold;
-      margin: 2rem 0;
-      
-      .energy-calculator-label {
-        padding: 0.5rem 2rem;
-        border-radius: 8px;
-        background: #2c3e50;
-        color: white;
-      }
+    h2 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .energy-calculator-result-details {
-      margin: 1rem 0;
-      font-size: 1.1rem;
-      line-height: 1.5;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--surface);
+      border-radius: 8px;
+      text-align: left;
+
+      h3 {
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        line-height: 1.5;
+
+        strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
+
+      .details-breakdown {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--grey-200);
+
+        p {
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+        }
+      }
     }
 
     .energy-calculator-reset-button {
       margin-top: 2rem;
       padding: 0.8rem 1.5rem;
       font-size: 1rem;
-      background-color: #34495e;
-      color: white;
+      background-color: var(--primary);
+      color: var(--text-on-dark);
       border: none;
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: #2c3e50;
+        background-color: var(--primary-dark);
       }
     }
   }
+}
+
+.energy-label-bars {
+  display: flex;
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: visible;
+  padding: 0.5rem 0;
+}
+
+.energy-label-bar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  transform-origin: center;
+  margin: 0 1px;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.active {
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    .energy-label-text {
+      font-weight: bold;
+    }
+  }
+}
+
+.energy-label-text {
+  color: var(--text-on-dark);
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  white-space: nowrap;
 } 

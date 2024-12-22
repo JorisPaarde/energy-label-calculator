@@ -7,7 +7,8 @@ export const calculateEnergyLabel = (formResponses) => {
   // Helper function to get value from answers object
   const getAnswerValue = (question, answer) => {
     if (!question.answers) return 0;
-    return question.answers[answer] || 0;
+    const value = question.answers[answer];
+    return typeof value === 'number' ? value : 0;
   };
 
   // Helper function to calculate score for number input with ranges
@@ -112,6 +113,9 @@ export const calculateEnergyLabel = (formResponses) => {
   if (bonus > 0) {
     details.push(`Bonus voor energiezuinige combinaties: ${bonus} punten`);
   }
+
+  // Ensure totalScore is a number
+  totalScore = Number(totalScore);
 
   // Determine energy label based on total score
   let label;

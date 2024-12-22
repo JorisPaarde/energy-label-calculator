@@ -1,3 +1,4 @@
+// Sass Variables
 // Colors
 $color-primary: #3b82f6;
 $color-primary-dark: #2563eb;
@@ -28,4 +29,46 @@ $border-radius-md: 8px;
 $border-radius-lg: 12px;
 
 // Breakpoints
-$breakpoint-mobile: 640px; 
+$breakpoint-mobile: 640px;
+
+// CSS Custom Properties
+:root {
+  // Base colors
+  --grey-100: #f3f4f6;
+  --grey-200: #e5e7eb;
+  --grey-300: #d1d5db;
+  --grey-400: #9ca3af;
+  --grey-500: #6b7280;
+  --grey-600: #4b5563;
+  --grey-700: #374151;
+  --grey-800: #1f2937;
+  --grey-900: #111827;
+
+  // Energy label colors
+  --energy-red: #ef4444;      // F
+  --energy-orange: #f97316;   // E
+  --energy-yellow: #eab308;   // D
+  --energy-lime: #84cc16;     // C
+  --energy-green-light: #22c55e; // B
+  --energy-green: #16a34a;    // A
+  --energy-green-dark: #15803d; // A+
+  --energy-emerald: #059669;  // A++
+  --energy-teal: #0d9488;     // A+++
+  --energy-cyan: #0891b2;     // A++++
+
+  // UI colors
+  --primary: var(--grey-800);
+  --primary-dark: var(--grey-900);
+  --secondary: var(--grey-600);
+  --accent: #{$color-primary};
+  --background: #{$color-background};
+  --surface: var(--grey-100);
+  --error: var(--energy-red);
+  --success: var(--energy-green);
+
+  // Text colors
+  --text-primary: var(--grey-900);
+  --text-secondary: var(--grey-600);
+  --text-disabled: var(--grey-400);
+  --text-on-dark: #{$color-background};
+}

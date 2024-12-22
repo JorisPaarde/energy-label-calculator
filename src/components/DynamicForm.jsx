@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import defaultFormData from '../data/formquestions.json';
 import FormHeader from './FormHeader';
 import '@styles/main.scss';
 import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
 import FormFields from './FormFields';
+import ResultDisplay from './ResultDisplay';
 
 const DynamicForm = ({ instanceId, settings }) => {
   const ANIMATION_DURATION = 500; // Consistent animation duration
@@ -14,6 +15,13 @@ const DynamicForm = ({ instanceId, settings }) => {
     : defaultFormData.questions;
 
   const formContainerRef = useRef(null);
+  const formTransitionRef = useRef(null);
+  
+  // Create refs for each form field
+  const fieldRefs = useMemo(() => 
+    Array(formData.length).fill(null).map(() => React.createRef()),
+    [formData.length]
+  );
 
   // Initialize form responses with empty values
   const initializeFormResponses = () => {
@@ -49,12 +57,28 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCalculationState({ isCalculating: true, result: null });
+    
+    // Create and log questions and answers object
+    const formAnswers = formData.reduce((acc, item, index) => {
+      const questionId = `question_${index}`;
+      const answer = formResponses[questionId];
+      if (answer && answer.length !== 0) {
+        acc[item.question] = answer;
+      }
+      return acc;
+    }, {});
+    
+    console.log(formAnswers);
     
     // Calculate the energy label
     const result = calculateEnergyLabel(formResponses);
     
-    // Scroll with header offset (adding instead of subtracting)
+    setCalculationState({ 
+      isCalculating: true, 
+      result: result  // Set the result immediately
+    });
+    
+    // Scroll with header offset
     if (formContainerRef.current) {
       const elementPosition = formContainerRef.current.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset + HEADER_OFFSET;
@@ -68,7 +92,7 @@ const DynamicForm = ({ instanceId, settings }) => {
     setTimeout(() => {
       setCalculationState({
         isCalculating: false,
-        result: result
+        result: result  // Keep the same result after calculation
       });
     }, ANIMATION_DURATION);
   };
@@ -200,9 +224,14 @@ const DynamicForm = ({ instanceId, settings }) => {
           timeout={ANIMATION_DURATION}
           classNames="energy-calculator-form-fade"
           unmountOnExit
+          nodeRef={formTransitionRef}
         >
-          <form onSubmit={handleSubmit} className={`energy-calculator-form ${calculationState.isCalculating ? 'energy-calculator-calculating' : ''}`}>
-            <TransitionGroup>
+          <form 
+            ref={formTransitionRef}
+            onSubmit={handleSubmit} 
+            className={`energy-calculator-form ${calculationState.isCalculating ? 'energy-calculator-calculating' : ''}`}
+          >
+            <TransitionGroup component={null}>
               {formData.map((item, index) => (
                 shouldShowQuestion(item, index) && (
                   <CSSTransition
@@ -210,8 +239,9 @@ const DynamicForm = ({ instanceId, settings }) => {
                     timeout={ANIMATION_DURATION}
                     classNames="energy-calculator-form-field"
                     unmountOnExit
+                    nodeRef={fieldRefs[index]}
                   >
-                    <div className="energy-calculator-form-group">
+                    <div ref={fieldRefs[index]} className="energy-calculator-form-group">
                       <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
                         {item.question}
                       </label>
@@ -233,25 +263,11 @@ const DynamicForm = ({ instanceId, settings }) => {
           </form>
         </CSSTransition>
 
-        <CSSTransition
-          in={calculationState.result !== null}
-          timeout={ANIMATION_DURATION}
-          classNames="energy-calculator-result-fade"
-          unmountOnExit
-        >
-          <div className="energy-calculator-result">
-            <h2>Berekend Energielabel</h2>
-            <div className="energy-calculator-label-display">
-              <span className="energy-calculator-label">{calculationState.result?.label}</span>
-            </div>
-            <div className="energy-calculator-result-details">
-              {calculationState.result?.details}
-            </div>
-            <button onClick={handleReset} className="energy-calculator-reset-button">
-              Opnieuw Berekenen
-            </button>
-          </div>
-        </CSSTransition>
+        <ResultDisplay 
+          result={calculationState.result}
+          onReset={handleReset}
+          animationDuration={ANIMATION_DURATION}
+        />
       </div>
     </div>
   );

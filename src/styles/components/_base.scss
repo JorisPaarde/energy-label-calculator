@@ -5,14 +5,14 @@
   // Force our styles to take precedence over WordPress
   font-family: $font-family-base;
   font-size: $font-size-base;
-  color: $color-text;
+  color: var(--text-primary);
   
   // Reset common WordPress interference
   margin: 0;
   padding: 0;
   border: 0;
   vertical-align: baseline;
-  background: transparent;
+  background: var(--background);
   all: initial;
   box-sizing: border-box;
   
