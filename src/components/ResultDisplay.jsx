@@ -82,11 +82,12 @@ const ResultDisplay = ({ result, onReset }) => {
         <div className="energy-label-bars" style={{ 
           display: 'flex',
           alignItems: 'flex-end',
-          gap: '8px',
+          gap: '4px',
           height: '100%',
           width: '100%',
           maxWidth: '800px',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          padding: '0 1rem'
         }}>
           {ENERGY_LABELS.map((label, index) => {
             const baseHeight = 20;
@@ -102,7 +103,9 @@ const ResultDisplay = ({ result, onReset }) => {
                 style={{ 
                   backgroundColor: barColor,
                   height: `${height}%`,
-                  width: '50px',
+                  flex: '1',
+                  minWidth: '20px',
+                  maxWidth: '45px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
