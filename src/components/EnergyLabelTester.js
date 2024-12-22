@@ -1,98 +1,48 @@
 import React, { useState } from 'react';
 import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
+import formData from '../data/formquestions.json';
 
-const testScenarios = [
-  {
-    name: "Modern Efficient Home",
-    answers: {
-      question_0: "2005-heden",
-      question_1: "Vrijstaande woning",
-      question_3: "150",
-      question_4: "HR+ /++ /+++ glas",
-      question_5: "Goede isolatie",
-      question_6: "Goede isolatie",
-      question_7: "Goede isolatie",
-      question_8: "Warmtepomp",
-      question_9: "Zonneboiler",
-      question_10: "Gebalanceerde ventilatie met WTW",
-      question_11: "Ja, 10 of meer"
+const generateRandomAnswers = () => {
+  const answers = {};
+  formData.questions.forEach((question, index) => {
+    const questionId = `question_${index}`;
+    
+    if (question.inputType === 'select') {
+      // Get random answer from available options
+      const options = Object.keys(question.answers);
+      answers[questionId] = options[Math.floor(Math.random() * options.length)];
+    } else if (question.inputType === 'number') {
+      // Generate random number within the ranges
+      const ranges = question.scoring.ranges;
+      const minRange = ranges[0].min || 0;
+      const maxRange = ranges[ranges.length - 1].max || 300;
+      answers[questionId] = Math.floor(Math.random() * (maxRange - minRange) + minRange).toString();
     }
-  },
-  {
-    name: "Average 90s Home",
-    answers: {
-      question_0: "1990-2005",
-      question_1: "Tussenwoning",
-      question_3: "120",
-      question_4: "HR glas",
-      question_5: "Matige isolatie",
-      question_6: "Matige isolatie",
-      question_7: "Matige isolatie",
-      question_8: "CV-ketel 2000-2020",
-      question_9: "Combiketel",
-      question_10: "Mechanische afzuiging",
-      question_11: "Nee"
-    }
-  },
-  {
-    name: "Old Apartment",
-    answers: {
-      question_0: "Vóór 1945",
-      question_1: "Appartement",
-      question_2: "Tussenappartement zonder dak",
-      question_3: "75",
-      question_4: "Dubbelglas",
-      question_6: "Matige isolatie",
-      question_7: "Geen isolatie",
-      question_8: "CV-ketel voor 2000",
-      question_9: "Combiketel",
-      question_10: "Natuurlijke ventilatie",
-      question_11: "Nee"
-    }
-  },
-  {
-    name: "Renovated Old Home",
-    answers: {
-      question_0: "1945-1975",
-      question_1: "Hoekwoning",
-      question_3: "140",
-      question_4: "HR+ /++ /+++ glas",
-      question_5: "Goede isolatie",
-      question_6: "Goede isolatie",
-      question_7: "Goede isolatie",
-      question_8: "Hybride warmtepomp",
-      question_9: "Zonneboiler",
-      question_10: "Gebalanceerde ventilatie",
-      question_11: "Ja, 6 tot 10"
-    }
-  },
-  {
-    name: "Basic 80s Home",
-    answers: {
-      question_0: "1975-1990",
-      question_1: "Tussenwoning",
-      question_3: "110",
-      question_4: "Dubbelglas",
-      question_5: "Matige isolatie",
-      question_6: "Matige isolatie",
-      question_7: "Geen isolatie",
-      question_8: "CV-ketel 2000-2020",
-      question_9: "Combiketel",
-      question_10: "Natuurlijke ventilatie",
-      question_11: "Nee"
-    }
+  });
+
+  // Handle apartment type dependency
+  if (answers.question_1 === 'Appartement') {
+    const apartmentTypes = Object.keys(formData.questions[2].answers);
+    answers.question_2 = apartmentTypes[Math.floor(Math.random() * apartmentTypes.length)];
   }
-];
+
+  return answers;
+};
 
 const EnergyLabelTester = () => {
   const [results, setResults] = useState([]);
   const [expanded, setExpanded] = useState({});
 
   const runTests = () => {
-    const newResults = testScenarios.map(scenario => ({
-      ...scenario,
-      result: calculateEnergyLabel(scenario.answers)
-    }));
+    // Generate 5 random test scenarios
+    const newResults = Array.from({ length: 5 }, (_, i) => {
+      const answers = generateRandomAnswers();
+      return {
+        name: `Random Test ${i + 1}`,
+        answers,
+        result: calculateEnergyLabel(answers)
+      };
+    });
     setResults(newResults);
   };
 
@@ -123,7 +73,7 @@ const EnergyLabelTester = () => {
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <h2>Energy Label Test Scenarios</h2>
+        <h2>Random Energy Label Tests</h2>
         <button 
           onClick={runTests}
           style={{
@@ -136,7 +86,7 @@ const EnergyLabelTester = () => {
             cursor: 'pointer'
           }}
         >
-          Run All Tests
+          Run Random Tests
         </button>
       </div>
 

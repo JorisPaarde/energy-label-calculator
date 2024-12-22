@@ -5,6 +5,7 @@ import '@styles/main.scss';
 import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
 import FormFields from './FormFields';
 import ResultDisplay from './ResultDisplay';
+import EnergyLabelTester from './EnergyLabelTester';
 
 const DynamicForm = ({ instanceId, settings }) => {
   const ANIMATION_DURATION = 500;
@@ -102,40 +103,50 @@ const DynamicForm = ({ instanceId, settings }) => {
   };
 
   return (
-    <div className="energy-calculator-form-container" ref={formContainerRef}>
-      <FormHeader />
-      <div className={`energy-calculator-content-wrapper ${calculationState.result ? 'has-result' : ''}`}>
-        <form 
-          onSubmit={handleSubmit} 
-          className={`energy-calculator-form ${calculationState.result ? 'has-result' : ''}`}
-        >
-          {formData.map((item, index) => (
-            shouldShowQuestion(item) && (
-              <div key={index} className="energy-calculator-form-group">
-                <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
-                  {item.question}
-                </label>
-                <FormFields
-                  item={item}
-                  index={index}
-                  formResponses={formResponses}
-                  handleInputChange={handleInputChange}
-                  shouldShowQuestion={shouldShowQuestion}
-                />
-              </div>
-            )
-          ))}
-          <button type="submit" className="energy-calculator-submit-button">
-            Bereken Energielabel
-          </button>
-        </form>
+    <div>
+      <div className="energy-calculator-form-container" ref={formContainerRef}>
+        <FormHeader />
+        <div className={`energy-calculator-content-wrapper ${calculationState.result ? 'has-result' : ''}`}>
+          <form 
+            onSubmit={handleSubmit} 
+            className={`energy-calculator-form ${calculationState.result ? 'has-result' : ''}`}
+          >
+            {formData.map((item, index) => (
+              shouldShowQuestion(item) && (
+                <div key={index} className="energy-calculator-form-group">
+                  <label htmlFor={`question_${index}`} className="energy-calculator-form-label">
+                    {item.question}
+                  </label>
+                  <FormFields
+                    item={item}
+                    index={index}
+                    formResponses={formResponses}
+                    handleInputChange={handleInputChange}
+                    shouldShowQuestion={shouldShowQuestion}
+                  />
+                </div>
+              )
+            ))}
+            <button type="submit" className="energy-calculator-submit-button">
+              Bereken Energielabel
+            </button>
+          </form>
 
-        <ResultDisplay 
-          result={calculationState.result}
-          onReset={handleReset}
-          animationDuration={ANIMATION_DURATION}
-        />
+          <ResultDisplay 
+            result={calculationState.result}
+            onReset={handleReset}
+            animationDuration={ANIMATION_DURATION}
+          />
+        </div>
       </div>
+
+      {/* Show EnergyLabelTester only in development mode */}
+      {import.meta.env.DEV && (
+        <>
+          <div style={{ margin: '40px 0', borderTop: '1px solid #ddd', width: '100%' }} />
+          <EnergyLabelTester />
+        </>
+      )}
     </div>
   );
 };
