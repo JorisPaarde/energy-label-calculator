@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import '@styles/main.scss';
 
 const ENERGY_LABELS = ['F', 'E', 'D', 'C', 'B', 'A', 'A+', 'A++', 'A+++', 'A++++'];
+const ANIMATION_DELAY_PER_BAR = 100; // ms between each bar animation
 
 const LABEL_COLORS = {
   'F': 'var(--energy-red)',
@@ -19,10 +20,20 @@ const LABEL_COLORS = {
 
 const ResultDisplay = ({ result, onReset, animationDuration }) => {
   const nodeRef = useRef(null);
+  const [animatedIndex, setAnimatedIndex] = useState(-1);
   
   useEffect(() => {
     if (result) {
       console.log('Energy Label Result:', result);
+      // Reset animation state when result changes
+      setAnimatedIndex(-1);
+      // Start animation sequence
+      const currentIndex = ENERGY_LABELS.indexOf(result.label);
+      for (let i = 0; i <= currentIndex; i++) {
+        setTimeout(() => {
+          setAnimatedIndex(i);
+        }, i * ANIMATION_DELAY_PER_BAR);
+      }
     }
   }, [result]);
 
@@ -32,7 +43,8 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
     const currentIndex = ENERGY_LABELS.indexOf(currentLabel);
     const labelIndex = ENERGY_LABELS.indexOf(label);
     
-    // Show colors for all labels up to and including current label
+    // Only show color if it's been animated
+    if (labelIndex > animatedIndex) return 'var(--grey-300)';
     return labelIndex <= currentIndex ? LABEL_COLORS[label] : 'var(--grey-300)';
   };
 
@@ -59,21 +71,24 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
             gap: '8px',
             height: '100%',
             width: '100%',
-            maxWidth: '800px'
+            maxWidth: '800px',
+            justifyContent: 'center'
           }}>
             {ENERGY_LABELS.map((label, index) => {
               const baseHeight = 20;
               const increment = 8;
               const height = baseHeight + (index * increment);
+              const isColored = index <= animatedIndex;
+              const barColor = getBarColor(label, result?.label);
               
               return (
                 <div 
                   key={label}
                   className={`energy-label-bar ${result?.label === label ? 'active' : ''}`}
                   style={{ 
-                    backgroundColor: getBarColor(label, result?.label),
+                    backgroundColor: barColor,
                     height: `${height}%`,
-                    flex: 1,
+                    width: '50px',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
@@ -84,10 +99,49 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
                     borderRadius: '4px 4px 0 0'
                   }}
                 >
-                  <span className="energy-label-text" style={{
+                  <div className="energy-label-text-container" style={{
                     marginTop: '8px',
-                    color: getBarColor(label, result?.label)
-                  }}>{label}</span>
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: isColored ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                    transition: 'all 0.3s ease',
+                  }}>
+                    {label.includes('+') ? (
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '2px'
+                      }}>
+                        <span className="energy-label-text" style={{
+                          color: isColored ? barColor : 'var(--grey-600)',
+                          fontWeight: isColored ? '600' : '400',
+                          transition: 'all 0.3s ease',
+                        }}>A</span>
+                        {Array.from(label.match(/\+/g)).map((plus, i) => (
+                          <span 
+                            key={i}
+                            className="energy-label-text" 
+                            style={{
+                              color: isColored ? barColor : 'var(--grey-600)',
+                              fontWeight: isColored ? '600' : '400',
+                              transition: 'all 0.3s ease',
+                              fontSize: '0.9em',
+                              lineHeight: '0.8'
+                            }}
+                          >
+                            +
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="energy-label-text" style={{
+                        color: isColored ? barColor : 'var(--grey-600)',
+                        fontWeight: isColored ? '600' : '400',
+                        transition: 'all 0.3s ease',
+                      }}>{label}</span>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -110,17 +164,6 @@ const ResultDisplay = ({ result, onReset, animationDuration }) => {
             </div>
           )}
         </div>
-        {/* <div className="energy-calculator-answers" style={{
-          backgroundColor: 'white',
-          padding: '2rem',
-          borderRadius: '8px',
-          marginTop: '1rem'
-        }}>
-          <h3>Antwoorden</h3>
-          <pre>
-            {JSON.stringify(result?.formAnswers || {}, null, 2)}
-          </pre>
-        </div> */}
         <button onClick={onReset} className="energy-calculator-reset-button" style={{
           marginTop: '2rem'
         }}>
