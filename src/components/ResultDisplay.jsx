@@ -55,6 +55,16 @@ const ResultDisplay = ({ result, onReset }) => {
   const handleReset = () => {
     setIsVisible(false);
     setAnimatedIndex(-1);
+
+    // Find the form container and scroll to it
+    const formContainer = document.querySelector('.energy-calculator-form-container');
+    if (formContainer) {
+      formContainer.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
     // Wait for the transition to complete before removing the component
     setTimeout(() => {
       setShouldRender(false);
