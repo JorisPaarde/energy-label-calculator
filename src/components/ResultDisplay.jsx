@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import '@styles/main.scss';
+import { ENERGY_LABELS_ORDERED } from '../utils/colorUtils';
 
-const ENERGY_LABELS = ['F', 'E', 'D', 'C', 'B', 'A', 'A+', 'A++', 'A+++', 'A++++'];
 const ANIMATION_DELAY_PER_BAR = 100; // ms between each bar animation
 const TRANSITION_DURATION = 600; // match the CSS transition duration
 
@@ -42,7 +42,7 @@ const ResultDisplay = ({ result, onReset }) => {
         }
 
         // Start bar animations
-        const currentIndex = ENERGY_LABELS.indexOf(result.label);
+        const currentIndex = ENERGY_LABELS_ORDERED.indexOf(result.label);
         for (let i = 0; i <= currentIndex; i++) {
           setTimeout(() => {
             setAnimatedIndex(i);
@@ -74,9 +74,9 @@ const ResultDisplay = ({ result, onReset }) => {
 
   const getBarColor = (label, currentLabel) => {
     if (!currentLabel) return 'var(--grey-300)';
-    
-    const currentIndex = ENERGY_LABELS.indexOf(currentLabel);
-    const labelIndex = ENERGY_LABELS.indexOf(label);
+
+    const currentIndex = ENERGY_LABELS_ORDERED.indexOf(currentLabel);
+    const labelIndex = ENERGY_LABELS_ORDERED.indexOf(label);
     
     // Only show color if it's been animated
     if (labelIndex > animatedIndex) return 'var(--grey-300)';
@@ -90,7 +90,7 @@ const ResultDisplay = ({ result, onReset }) => {
       <h2>Uw Energielabel indicatie</h2>
       <div className="result-chart-container">
         <div className="energy-label-bars">
-          {ENERGY_LABELS.map((label, index) => {
+          {ENERGY_LABELS_ORDERED.map((label, index) => {
             const baseHeight = window.innerWidth <= 768 ? 16 : 20;
             const increment = window.innerWidth <= 768 ? 6.4 : 8;
             const height = baseHeight + (index * increment);

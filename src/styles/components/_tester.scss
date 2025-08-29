@@ -1,0 +1,80 @@
+// Energy Label Tester Component Styles
+.energy-label-tester {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0 0 20px 0;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  &__card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &__card-title {
+    margin-top: 0;
+    color: #333;
+  }
+
+  &__result-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  &__label-badge {
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  &__score {
+    font-size: 16px;
+  }
+
+  &__toggle-button {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &__details {
+    margin-top: 10px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  &__details-title {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  &__details-pre {
+    margin: 5px 0;
+    font-size: 12px;
+  }
+}

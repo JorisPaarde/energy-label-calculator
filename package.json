@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "vite --config vite.config.js",
     "build": "vite build",
-    "build:plugin": "node scripts/build-wp-plugin.js",
+    "build:admin": "vite build --config vite.admin.config.js",
+    "build:all": "npm run build && npm run build:admin",
+    "build:plugin": "npm run build:all && node scripts/build-wp-plugin.js",
     "preview": "vite preview"
   },
   "dependencies": {

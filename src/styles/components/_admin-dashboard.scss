@@ -1,0 +1,212 @@
+// Admin Dashboard Component Styles
+.admin-dashboard {
+  padding: 20px;
+  background-color: #f1f1f1;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h1 {
+      color: #333;
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #666;
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  &__stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+      color: #666;
+      margin: 0 0 15px 0;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &__stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2196F3;
+    margin: 0 0 10px 0;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    color: #999;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  &__charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  &__chart {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &__chart-title {
+    color: #333;
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__chart-container {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 15px;
+    padding: 10px 0;
+    min-width: 30px;
+  }
+
+  &__chart-y-tick {
+    color: #999;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: right;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__chart-content {
+    flex: 1;
+    position: relative;
+  }
+
+  &__chart-x-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 10px;
+  }
+
+  &__chart-x-tick {
+    color: #999;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    transform: rotate(-45deg);
+    transform-origin: center;
+    white-space: nowrap;
+  }
+
+  &__chart-legend {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__chart-legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+  }
+
+  &__chart-legend-item span {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &__footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+
+    p {
+      color: #999;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    a {
+      color: #2196F3;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 15px;
+
+    &__stats {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    &__charts {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    &__chart {
+      padding: 20px;
+    }
+
+    &__chart-x-tick {
+      font-size: 10px;
+      transform: rotate(-90deg);
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import defaultFormData from '../data/formquestions.json';
 import FormHeader from './FormHeader';
 import '@styles/main.scss';
@@ -6,6 +6,7 @@ import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
 import FormFields from './FormFields';
 import ResultDisplay from './ResultDisplay';
 import EnergyLabelTester from './EnergyLabelTester';
+import { initializeFormResponses, shouldShowQuestion, transformFormAnswers } from '../utils/formUtils';
 
 const DynamicForm = ({ instanceId, settings }) => {
   const ANIMATION_DURATION = 500;
@@ -21,48 +22,7 @@ const DynamicForm = ({ instanceId, settings }) => {
     result: null
   });
 
-  // Initialize form responses with empty values or defaults
-  function initializeFormResponses() {
-    const initialResponses = {};
-    formData.forEach((item, index) => {
-      const questionId = `question_${index}`;
-      
-      // Skip setting default values for conditional questions that shouldn't be shown initially
-      if (item.showIf) {
-        const dependentQuestionId = formData.findIndex(q => q.question === item.showIf.question);
-        if (dependentQuestionId !== -1) {
-          // For questions with showIf condition, don't set an initial value
-          initialResponses[questionId] = '';
-          return;
-        }
-      }
-      
-      if (item.inputType === 'checkbox') {
-        initialResponses[questionId] = [];
-      } else if (item.inputType === 'select' || item.inputType === 'radio') {
-        if (item.answers) {
-          const firstAnswer = Object.keys(item.answers)[0];
-          initialResponses[questionId] = firstAnswer || '';
-        } else if (item.choices && item.choices.length > 0) {
-          initialResponses[questionId] = typeof item.choices[0] === 'object' 
-            ? item.choices[0].value 
-            : item.choices[0];
-        } else {
-          initialResponses[questionId] = '';
-        }
-      } else if (item.inputType === 'number') {
-        if (item.scoring?.ranges && item.scoring.ranges.length > 0) {
-          const firstRange = item.scoring.ranges[0];
-          initialResponses[questionId] = firstRange.min || 0;
-        } else {
-          initialResponses[questionId] = item.min || 0;
-        }
-      } else {
-        initialResponses[questionId] = item.defaultValue || '';
-      }
-    });
-    return initialResponses;
-  }
+
 
   useEffect(() => {
     setFormResponses(initializeFormResponses());
@@ -77,27 +37,20 @@ const DynamicForm = ({ instanceId, settings }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const formAnswers = formData.reduce((acc, item, index) => {
-      const questionId = `question_${index}`;
-      const answer = formResponses[questionId];
-      acc[item.question] = answer;
-      return acc;
-    }, {});
-    
+
     const result = calculateEnergyLabel(formResponses);
-    result.formAnswers = formAnswers;
-    
-    setCalculationState({ 
-      isCalculating: true, 
+    result.formAnswers = transformFormAnswers(formResponses, formData);
+
+    setCalculationState({
+      isCalculating: true,
       result: result
     });
 
     setTimeout(() => {
-      setCalculationState({
-        isCalculating: false,
-        result: result
-      });
+      setCalculationState(prev => ({
+        ...prev,
+        isCalculating: false
+      }));
     }, ANIMATION_DURATION);
   };
 

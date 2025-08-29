@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { calculateEnergyLabel } from '../utils/energyLabelCalculator';
+import { getLabelColor } from '../utils/colorUtils';
 import formData from '../data/formquestions.json';
 
 const generateRandomAnswers = () => {
@@ -53,108 +54,57 @@ const EnergyLabelTester = () => {
     }));
   };
 
-  const getLabelColor = (label) => {
-    const colors = {
-      'A++++': '#1B5E20',
-      'A+++': '#2E7D32',
-      'A++': '#388E3C',
-      'A+': '#43A047',
-      'A': '#4CAF50',
-      'B': '#7CB342',
-      'C': '#9CCC65',
-      'D': '#FDD835',
-      'E': '#FFB300',
-      'F': '#FB8C00',
-      'G': '#E64A19'
-    };
-    return colors[label] || '#000000';
-  };
+
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <h2>Random Energy Label Tests</h2>
-        <button 
+    <div className="energy-label-tester">
+      <div className="energy-label-tester__header">
+        <h2 className="energy-label-tester__title">Random Energy Label Tests</h2>
+        <button
           onClick={runTests}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
+          className="energy-calculator-submit-button"
         >
           Run Random Tests
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+      <div className="energy-label-tester__grid">
         {results.map((result, index) => (
-          <div 
+          <div
             key={index}
-            style={{
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              padding: '15px',
-              backgroundColor: 'white',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
+            className="energy-label-tester__card"
           >
-            <h3 style={{ marginTop: 0, color: '#333' }}>{result.name}</h3>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '10px',
-              marginBottom: '10px'
-            }}>
-              <div style={{
-                backgroundColor: getLabelColor(result.result?.label),
-                color: 'white',
-                padding: '8px 16px',
-                borderRadius: '4px',
-                fontWeight: 'bold',
-                fontSize: '18px'
-              }}>
+            <h3 className="energy-label-tester__card-title">{result.name}</h3>
+            <div className="energy-label-tester__result-section">
+              <div
+                className="energy-label-tester__label-badge"
+                style={{ backgroundColor: getLabelColor(result.result?.label) }}
+              >
                 {result.result?.label || 'N/A'}
               </div>
-              <div style={{ fontSize: '16px' }}>
+              <div className="energy-label-tester__score">
                 Score: {result.result?.score || 'N/A'}
               </div>
             </div>
 
             <button
               onClick={() => toggleDetails(index)}
-              style={{
-                backgroundColor: 'transparent',
-                border: '1px solid #ccc',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
+              className="energy-label-tester__toggle-button"
             >
               {expanded[index] ? 'Hide Details' : 'Show Details'}
             </button>
 
             {expanded[index] && (
-              <div style={{ 
-                marginTop: '10px',
-                fontSize: '14px',
-                whiteSpace: 'pre-wrap',
-                backgroundColor: '#f5f5f5',
-                padding: '10px',
-                borderRadius: '4px'
-              }}>
-                <div style={{ marginBottom: '10px' }}>
+              <div className="energy-label-tester__details">
+                <div className="energy-label-tester__details-title">
                   <strong>Details:</strong>
-                  <pre style={{ margin: '5px 0', fontSize: '12px' }}>
+                  <pre className="energy-label-tester__details-pre">
                     {result.result?.details}
                   </pre>
                 </div>
                 <div>
                   <strong>Inputs:</strong>
-                  <pre style={{ margin: '5px 0', fontSize: '12px' }}>
+                  <pre className="energy-label-tester__details-pre">
                     {JSON.stringify(result.answers, null, 2)}
                   </pre>
                 </div>
