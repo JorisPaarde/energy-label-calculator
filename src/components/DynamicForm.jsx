@@ -46,6 +46,48 @@ const DynamicForm = ({ instanceId, settings }) => {
       result: result
     });
 
+    // Track submission in WordPress database
+    console.log('Attempting to track submission...');
+    console.log('Window AJAX object:', window.energy_label_calculator_ajax);
+    
+    if (window.energy_label_calculator_ajax) {
+      const formData = new FormData();
+      formData.append('action', 'energy_label_calculator_track_submission');
+      formData.append('nonce', window.energy_label_calculator_ajax.nonce);
+      formData.append('form_data', JSON.stringify(result.formAnswers));
+      formData.append('calculated_label', result.label);
+      formData.append('calculated_score', result.score);
+
+      console.log('Sending submission data:', {
+        action: 'energy_label_calculator_track_submission',
+        nonce: window.energy_label_calculator_ajax.nonce,
+        form_data: result.formAnswers,
+        calculated_label: result.label,
+        calculated_score: result.score
+      });
+
+      fetch(window.energy_label_calculator_ajax.ajax_url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          console.log('Submission tracked successfully:', data.message);
+        } else {
+          console.error('Submission tracking failed:', data.data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Submission tracking error:', error);
+      });
+    } else {
+      console.log('WordPress AJAX not available for submission tracking');
+    }
+
     setTimeout(() => {
       setCalculationState(prev => ({
         ...prev,

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Test - Energy Label Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f1;
+        }
+        .admin-header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .admin-header h1 {
+            color: #1d2327;
+            margin: 0;
+        }
+        .admin-header p {
+            color: #646970;
+            margin: 10px 0 0 0;
+        }
+        .test-links {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-links h2 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        .test-links a {
+            display: inline-block;
+            background: #0073aa;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .test-links a:hover {
+            background: #005a87;
+        }
+        .admin-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1>🔧 Admin Dashboard Test Environment</h1>
+        <p>Test the WordPress admin dashboard functionality locally</p>
+    </div>
+    
+    <div class="test-links">
+        <h2>🧪 Test Options:</h2>
+        <a href="index.html">📝 Test Form Calculator</a>
+        <a href="#" onclick="testSubmission()">📊 Test Form Submission</a>
+        <a href="#" onclick="testDashboardData()">📈 Test Dashboard Data</a>
+        <a href="#" onclick="clearMockData()">🗑️ Clear Mock Data</a>
+    </div>
+    
+    <div class="admin-container">
+        <h2>📊 Admin Dashboard</h2>
+        <div id="admin-dashboard-container"></div>
+    </div>
+
+    <!-- React Development CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Development build with HMR -->
+    <script type="module" src="/src/wordpress-admin-entry.jsx"></script>
+    
+    <script>
+        // Test functions
+        function testSubmission() {
+            if (window.mockTrackSubmission) {
+                const testData = {
+                    form_data: JSON.stringify({test: 'data'}),
+                    calculated_label: 'A++',
+                    calculated_score: 850
+                };
+                window.mockTrackSubmission(testData);
+                alert('Test submission added! Check console for details.');
+            } else {
+                alert('Mock WordPress not loaded yet. Wait a moment and try again.');
+            }
+        }
+        
+        function testDashboardData() {
+            if (window.mockGetDashboardStats) {
+                window.mockGetDashboardStats().then(data => {
+                    console.log('Dashboard data:', data);
+                    alert('Dashboard data fetched! Check console for details.');
+                });
+            } else {
+                alert('Mock WordPress not loaded yet. Wait a moment and try again.');
+            }
+        }
+        
+        function clearMockData() {
+            if (window.mockSubmissions) {
+                window.mockSubmissions = [];
+                alert('Mock data cleared! Refresh the page to see empty dashboard.');
+            } else {
+                alert('Mock WordPress not loaded yet. Wait a moment and try again.');
+            }
+        }
+    </script>
+</body>
+</html>

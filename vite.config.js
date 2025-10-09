@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => ({
       entry: path.resolve(__dirname, 'src/wordpress-entry.jsx'),
       name: 'EnergyCalculator',
       formats: ['iife'],
-      fileName: () => 'wordpress-widget.js'
+      fileName: () => 'energy-label-calculator.js'
     },
     
     rollupOptions: {
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => ({
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') {
-            return 'wordpress-widget.css'
+            return 'energy-label-calculator.css'
           }
           return assetInfo.name
         }

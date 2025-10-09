@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => ({
   base: '/',
   
   build: {
-    outDir: 'dist',
+    outDir: 'dist/admin',
     sourcemap: true,
     minify: 'terser',
     
@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => ({
       entry: path.resolve(__dirname, 'src/wordpress-admin-entry.jsx'),
       name: 'EnergyCalculatorAdmin',
       formats: ['iife'],
-      fileName: () => 'wordpress-widget-admin.js'
+      fileName: () => 'energy-label-calculator-admin.js'
     },
     
     rollupOptions: {
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => ({
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') {
-            return 'wordpress-widget-admin.css'
+            return 'energy-label-calculator-admin.css'
           }
           return assetInfo.name
         }

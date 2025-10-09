@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '@styles/admin-dashboard.scss';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -9,67 +8,86 @@ const AdminDashboard = () => {
   });
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
-    // Simulate fetching data from WordPress
+    // Initial data fetch
     fetchDashboardData();
+    
+    // Auto-refresh every 30 seconds to keep data up-to-date
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 30000); // 30 seconds
+    
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboardData = () => {
-    // In a real implementation, this would fetch from WordPress REST API
-    // For now, we'll simulate with mock data
-    const mockStats = {
-      lastWeek: 3,
-      lastMonth: 9,
-      lastYear: 27
-    };
+    setIsLoading(true);
+    console.log('Fetching dashboard data...');
+    console.log('Window AJAX object:', window.energy_label_calculator_ajax);
+    
+    // Fetch real data from WordPress AJAX endpoint
+    if (window.energy_label_calculator_ajax) {
+      const formData = new FormData();
+      formData.append('action', 'energy_label_calculator_get_dashboard_stats');
+      formData.append('nonce', window.energy_label_calculator_ajax.nonce);
 
-    const mockWeeklyData = [
-      { date: '2025-08-23', value: 0 },
-      { date: '2025-08-24', value: 0 },
-      { date: '2025-08-25', value: 0 },
-      { date: '2025-08-26', value: 0 },
-      { date: '2025-08-27', value: 0 },
-      { date: '2025-08-28', value: 3 },
-      { date: '2025-08-29', value: 0 }
-    ];
+      console.log('Making fetch request to:', window.energy_label_calculator_ajax.ajax_url);
+      console.log('FormData:', formData);
 
-    const mockMonthlyData = [
-      { date: '2025-07-31', value: 0 },
-      { date: '2025-08-01', value: 0 },
-      { date: '2025-08-02', value: 0 },
-      { date: '2025-08-03', value: 0 },
-      { date: '2025-08-04', value: 0 },
-      { date: '2025-08-05', value: 2 },
-      { date: '2025-08-06', value: 1 },
-      { date: '2025-08-07', value: 1 },
-      { date: '2025-08-08', value: 0 },
-      { date: '2025-08-09', value: 0 },
-      { date: '2025-08-10', value: 0 },
-      { date: '2025-08-11', value: 0 },
-      { date: '2025-08-12', value: 1 },
-      { date: '2025-08-13', value: 1 },
-      { date: '2025-08-14', value: 0 },
-      { date: '2025-08-15', value: 0 },
-      { date: '2025-08-16', value: 0 },
-      { date: '2025-08-17', value: 0 },
-      { date: '2025-08-18', value: 0 },
-      { date: '2025-08-19', value: 0 },
-      { date: '2025-08-20', value: 0 },
-      { date: '2025-08-21', value: 0 },
-      { date: '2025-08-22', value: 0 },
-      { date: '2025-08-23', value: 0 },
-      { date: '2025-08-24', value: 0 },
-      { date: '2025-08-25', value: 0 },
-      { date: '2025-08-26', value: 0 },
-      { date: '2025-08-27', value: 0 },
-      { date: '2025-08-28', value: 3 },
-      { date: '2025-08-29', value: 0 }
-    ];
-
-    setStats(mockStats);
-    setWeeklyData(mockWeeklyData);
-    setMonthlyData(mockMonthlyData);
+      fetch(window.energy_label_calculator_ajax.ajax_url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setStats(data.data.stats);
+          
+          // Transform weekly data for charts
+          const weeklyData = data.data.weeklyData.map(item => ({
+            date: item.date,
+            value: parseInt(item.count)
+          }));
+          setWeeklyData(weeklyData);
+          
+          // Transform monthly data for charts
+          const monthlyData = data.data.monthlyData.map(item => ({
+            date: item.date,
+            value: parseInt(item.count)
+          }));
+          setMonthlyData(monthlyData);
+          
+          setLastUpdated(new Date());
+        } else {
+          console.error('Failed to fetch dashboard data:', data.data.message);
+          // Fallback to empty data
+          setStats({ lastWeek: 0, lastMonth: 0, lastYear: 0 });
+          setWeeklyData([]);
+          setMonthlyData([]);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching dashboard data:', error);
+        // Fallback to empty data
+        setStats({ lastWeek: 0, lastMonth: 0, lastYear: 0 });
+        setWeeklyData([]);
+        setMonthlyData([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    } else {
+      // Fallback for development/testing
+      console.log('WordPress AJAX not available, using mock data');
+      setStats({ lastWeek: 0, lastMonth: 0, lastYear: 0 });
+      setWeeklyData([]);
+      setMonthlyData([]);
+      setIsLoading(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -87,6 +105,39 @@ const AdminDashboard = () => {
   const renderChart = (data, color, title) => {
     const maxValue = getMaxValue(data);
     
+    // Build smooth bezier path from data points
+    const computePoints = (series) => {
+      if (!series || series.length === 0) return [];
+      const width = 400;
+      const height = 200;
+      const len = series.length - 1 || 1;
+      return series.map((item, index) => {
+        const x = (index / len) * width;
+        const y = height - ((item.value / maxValue) * height);
+        return { x, y };
+      });
+    };
+
+    const generateSmoothLinePath = (points) => {
+      if (points.length === 0) return 'M 0 200';
+      if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+      let d = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const p0 = points[i - 1];
+        const p1 = points[i];
+        const cx1 = (p0.x + p1.x) / 2;
+        const cy1 = p0.y;
+        const cx2 = (p0.x + p1.x) / 2;
+        const cy2 = p1.y;
+        d += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${p1.x} ${p1.y}`;
+      }
+      return d;
+    };
+
+    const points = computePoints(data);
+    const smoothLineD = generateSmoothLinePath(points);
+    const smoothAreaD = `${points.length > 0 ? smoothLineD : 'M 0 200'} L 400 200 L 0 200 Z`;
+
     return (
       <div className="admin-dashboard__chart">
         <h3 className="admin-dashboard__chart-title">{title}</h3>
@@ -106,25 +157,8 @@ const AdminDashboard = () => {
                   <stop offset="100%" stopColor={color} stopOpacity="0.3" />
                 </linearGradient>
               </defs>
-              <path
-                d={data.map((item, index) => {
-                  const x = (index / (data.length - 1)) * 400;
-                  const y = 200 - ((item.value / maxValue) * 200);
-                  return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-                }).join(' ')}
-                stroke={color}
-                strokeWidth="2"
-                fill="none"
-              />
-              <path
-                d={data.map((item, index) => {
-                  const x = (index / (data.length - 1)) * 400;
-                  const y = 200 - ((item.value / maxValue) * 200);
-                  return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-                }).join(' ') + ` L 400 200 L 0 200 Z`}
-                fill={`url(#gradient-${color})`}
-                opacity="0.1"
-              />
+              <path d={smoothLineD} stroke={color} strokeWidth="2" fill="none" />
+              <path d={smoothAreaD} fill={`url(#gradient-${color})`} opacity="0.1" />
             </svg>
             <div className="admin-dashboard__chart-x-axis">
               {data.map((item, index) => (
@@ -151,24 +185,39 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="admin-dashboard__header">
-        <h1>Energielabel Calculator Dashboard</h1>
-        <p>Overzicht van formulier inzendingen</p>
+        <div className="admin-dashboard__header-content">
+          <div>
+            <h1>Energielabel Calculator Dashboard</h1>
+            <p>Overzicht van formulier inzendingen</p>
+            {lastUpdated && (
+              <small className="admin-dashboard__last-updated">
+                Laatst bijgewerkt: {lastUpdated.toLocaleString('nl-NL')}
+              </small>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="admin-dashboard__stats">
         <div className="admin-dashboard__stat-card">
           <h3>Afgelopen Week</h3>
-          <div className="admin-dashboard__stat-value">{stats.lastWeek}</div>
+          <div className="admin-dashboard__stat-value">
+            {isLoading ? '...' : stats.lastWeek}
+          </div>
           <div className="admin-dashboard__stat-label">ZOEKOPDRACHTEN</div>
         </div>
         <div className="admin-dashboard__stat-card">
           <h3>Afgelopen Maand</h3>
-          <div className="admin-dashboard__stat-value">{stats.lastMonth}</div>
+          <div className="admin-dashboard__stat-value">
+            {isLoading ? '...' : stats.lastMonth}
+          </div>
           <div className="admin-dashboard__stat-label">ZOEKOPDRACHTEN</div>
         </div>
         <div className="admin-dashboard__stat-card">
           <h3>Afgelopen Jaar</h3>
-          <div className="admin-dashboard__stat-value">{stats.lastYear}</div>
+          <div className="admin-dashboard__stat-value">
+            {isLoading ? '...' : stats.lastYear}
+          </div>
           <div className="admin-dashboard__stat-label">ZOEKOPDRACHTEN</div>
         </div>
       </div>
