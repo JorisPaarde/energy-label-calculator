@@ -6,7 +6,7 @@ import { createWriteStream } from 'fs'
 
 const PLUGIN_NAME = 'energy-label-calculator'
 const PLUGIN_DISPLAY_NAME = 'Energy Label Calculator'
-const PLUGIN_VERSION = '1.1.0'
+const PLUGIN_VERSION = '1.2.0'
 const PLUGIN_DESCRIPTION = 'Een React-gebaseerde energielabel calculator voor WordPress met admin dashboard'
 const PLUGIN_AUTHOR = 'JPWebCreation - Joris Paardekooper'
 const PLUGIN_URI = 'https://jpwebcreation.nl/energy-label-calculator'
